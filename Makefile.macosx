@@ -1,0 +1,16 @@
+#AntTweakBar (without X11 support)
+ATB_STATIC := /Users/desi/kdl/atb/atb_osx_lean/lib/atb.a
+ATB_INCLUDE:= /Users/desi/kdl/atb/atb_osx_lean/include
+
+#GLFW
+GLFW_STATIC:= /Users/desi/kdl/glfw/glfw/lib/macosx/libglfw.a
+GLFW_INCLUDE:= /Users/desi/kdl/glfw/glfw/include
+
+#GTEST
+GTEST_STATIC:= /Users/desi/kdl/gtest/lib/.libs/libgtest_main.a  /Users/desi/kdl/gtest/lib/.libs/libgtest.a
+GTEST_INCLUDE:= /Users/desi/kdl/gtest/include
+
+LINKFLAGS := -framework AGL -framework OpenGL -framework Carbon -lz
+CXXFLAGS := -mmacosx-version-min=10.4 -DMACOSX
+
+-include Makefile
