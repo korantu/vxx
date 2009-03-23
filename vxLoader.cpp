@@ -344,7 +344,7 @@ bool MgzReadHeader(Io & io, MgzLoader::Header * header){
   int unused_space_size = UNUSED_SPACE_SIZE-sizeof(short) ;
 
   int   width, height, depth, nframes, x, y, z, dof;
-    short good_ras_flag;
+  short good_ras_flag;
 
   float  xsize, ysize, zsize, x_r, x_a, x_s, y_r, y_a, y_s;
   float z_r, z_a, z_s, c_r, c_a, c_s ;

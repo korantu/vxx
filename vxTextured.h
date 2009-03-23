@@ -14,6 +14,8 @@
 #define __vxTextured_h__
 
 #include "vxValidatable.h"
+#include "vxFastVolume.h"
+#include "vxRange.h"
 
 class Textured: public Validatable {
 

@@ -141,7 +141,6 @@ bool FastVolume::in_scope(int off){
   if(!use_scope)return true;
   int x, y, z;
   getCoords(off, x, y, z);
-  printf("%d:%d:%d\n", x, y, z);
 
   return(
 	 (x > min_x) && (x < max_x) && 

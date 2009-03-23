@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxDrawPlane_UT.cpp
+* @file vxTouchAction_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 
@@ -12,12 +12,11 @@
 
 #include <gtest/gtest.h>
 
-#include "vxOpenGlTools.h"
-#include "vxDrawPlane.h"
+#include "vxTouchAction.h"
 
-TEST(MAIN, DrawPlane){
-  
+TEST(MAIN, TouchAction){
+  EXPECT_EQ(2,2);
 };
 
 
-//End of vxDrawPlane_UT.cpp
+//End of vxTouchAction_UT.cpp

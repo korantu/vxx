@@ -16,7 +16,6 @@
 #include "vxLoader.h"
 
 TEST(MAIN, FastVolume){
-  
   FastVolume vol;
   
   MgzLoader mri(vol);

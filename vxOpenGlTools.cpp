@@ -18,7 +18,7 @@
 */
 
 const V3f & glColor3f(const V3f & v){
-  glColor3f(v.x, v.y, v.z); return v;
+  glColor4f(v.x, v.y, v.z, 0.2); return v;
 };
 
 const V3f & glVertex3f(const V3f & v){
@@ -37,5 +37,22 @@ const V3f & SetColor(const V3f & v){
   glColor3f(v.x, v.y, v.z); return v;
 };
 
+void Transparent(Drawable * object){
+  Transparent(true);
+  object->Draw();
+  Transparent(false);
+};
+
+void Transparent(bool is){
+  if(is){
+    glEnable(GL_BLEND);
+    glDisable(GL_LIGHTING);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
+  }else{
+    glDisable(GL_BLEND);
+    glEnable(GL_LIGHTING);
+  };
+};
 
 // End of vxOpenGlTools.cpp

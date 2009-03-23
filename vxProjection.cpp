@@ -33,12 +33,13 @@ void Projection::Reset( int N){
   zoom = 1; zoom_x = 0; zoom_y = 0;
   V3f basis[] = {V3f(1,0,0), V3f(0,1,0), V3f(0,0,1)};
   ex=basis[N%3]; ey=basis[(N+1)%3]; ez=basis[(N+2)%3]; 
-  double _matrix[] = {1.0, 0.0, 0.0, 0.0,
+  double _matrix[] = {1.0, 0.0, 0.0, 0.0, //Copy last row and column.
 		      0.0, 1.0, 0.0, 0.0,
 		      0.0, 0.0, 1.0, 0.0,
 		      0.0, 0.0, 0.0, 1.0};
   for(int i = 0; i < 16; i++)matrix[i]=_matrix[i];
-  CopyMatrix();
+  CopyMatrix(); //middle part.
+  ortoNormalize(ex,ey,ez);
 };
 
 
@@ -80,7 +81,7 @@ void Projection::Draw(){
 
   glFrustum(-fit_w*zoom+center_w, fit_w*zoom+center_w, 
 	      -fit_h*zoom+center_h, fit_h*zoom+center_h, 
-	      2*fit_w, 5*fit_w);
+	    2*fit_w, 6.83*fit_w); //to make far and near symmetrical.
   
     glTranslatef(0,0,-4*fit_w);
 
@@ -89,5 +90,49 @@ void Projection::Draw(){
   CopyMatrix();
   glLoadMatrixd(matrix);
 };
+
+//[TODO] //implement the actions.
+
+HomingAction::HomingAction(): interactive_change(0){};
+
+void HomingAction::Reset(){
+//only change every 30 clicks.
+  scene->getProjection()->Reset ( interactive_change / 30 );
+}
+  
+void HomingAction::Start() {
+  Reset();
+};
+  
+  void Do() {
+    interactive_change += motion.dx + motion.dy;
+    Reset();
+  };  
+};
+
+struct ZoomingAction: Action {
+  int start_x, start_y;
+  void Start(){
+    start_x = motion.x; start_y = motion.y;
+  };
+
+  void Do(){
+    float dx2 = (start_x-motion.x)*(start_x-motion.x); 
+    float dy2 = (start_y-motion.y)*(start_y-motion.y); 
+    float new_zoom = 100.0/(100.0+sqrt(dx2+dy2));
+    scene->get_projection()->Zoom( start_x, start_y, new_zoom);
+  };
+} zooming_action;
+
+
+struct RotationAction: Action {
+  void Do(){
+    projection_state.Rotate( motion.dy*0.01, motion.dx*0.01);
+  };
+};
+
+
+
+RotationAction
 
 // End of vxProjection.cpp

@@ -37,10 +37,14 @@ struct Intersection{
   bool hit;
   float distance;
   Intersection & is(bool, float);
+  Intersection();
 };
 
-Intersection & IntersectRayPlane(const Ray & ray, const Ray & plane, Intersection & result);
-Intersection & IntersectRaySphere(const Ray & ray, const V3f & center, float r, Intersection & result);
+struct Surface;
+
+Intersection IntersectRayPlane(const Ray & ray, const Ray & plane);
+Intersection IntersectRaySphere(const Ray & ray, const V3f & center, float r);
+Intersection IntersectRaySurface(const Ray & ray, Surface * surface);
  
 
 #endif // __vxRay_h__

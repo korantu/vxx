@@ -72,8 +72,11 @@
 
       V3 cross(const V3 & a) const { V3 tmp; tmp.cross(*this, a); return tmp; };
 
+      T min() const {return (x < y)?
+	  ((x < z)?x:z):
+          ((y < z)?y:z);};
 
-      float dot(const V3 & a) const { return x*a.x+y*a.y+z*a.z;};
+      T dot(const V3 & a) const { return x*a.x+y*a.y+z*a.z;};
 
       T operator[] (int i) const {return ((const T *)(&x))[i];};
       T SetCoord (int i, T in) const {return ((T *)(&x))[i] = in;};
@@ -93,6 +96,7 @@ V3f rot_z(V3f in, float r);
 void ortoNormalize(V3f &x, V3f &y, V3f &z);
 
 void say(char *, const V3f &);
+
  
 
 #endif // __vxVector_h__

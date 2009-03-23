@@ -10,32 +10,33 @@
 *  
 */
 
+#include <stdio.h>
+
 #include "vxAction.h"
 
-using namespace std;
+///Storage for actions.
 
-Action * Action::Init(int x, int y){
-  motion.x = x; motion.y = y;
-  motion.dx = 0; motion.dy = 0;
-  Start();
-  Do();
-  return this;
+typedef map<int, Action *> __global_actions_storage__;
+__global_actions_storage__  __global_actions__;
+
+///Put an action in starage
+int Action::bind(int key, Action * action){
+  __global_actions__[key] = action;
+  return key;
 };
 
-Action * Action::Move(int x, int y){
-  motion.dx = x - motion.x; 
-  motion.dy = y - motion.y;
-  motion.x = x;
-  motion.y = y;
-  Do();
-  return this;
+///Get and use it... presumably only by Scene (?)
+Action * Action::get(int key){
+  __global_actions_storage__::iterator i = __global_actions__.find(key);
+  if(i != actions.end()){
+    return i.second; 
+  }else{
+    return NULL;
+  };
 };
 
-Action * Action::Done(int x, int y){
-  Move(x, y);
-  End();
+Action * Action::operator() (Scene * _scene) {
+  scene = _scene;
   return this;
 };
-
-
 // End of vxAction.cpp

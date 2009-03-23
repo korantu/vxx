@@ -41,6 +41,24 @@ struct Projection: Drawable {
 
   virtual void Draw();
 };
+
+///The following actually uses Projection, but it is \-* away.
+struct HomingAction: Action {
+  int interactive_change;
+  HomingAction();
+};
+
+struct ZoomingAction: Action {
+  int start_x, start_y;
+  void Start();
+  void Do();
+};
+
+struct RotationAction: Action {
+  void Do();
+};
+
+
  
 #endif // __vxProjection_h__
 

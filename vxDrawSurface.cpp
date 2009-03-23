@@ -12,6 +12,8 @@
 
 #include "vxDrawSurface.h"
 #include "vxOpenGlTools.h"
+#include "vxTextured.h"
+#include "vxRange.h"
 
 #ifndef PI
 #define PI 3.14159265
@@ -40,8 +42,8 @@ void DrawSphereVertex(float a,
   glNormal3f(1*n.x, 1*n.y, 1*n.z);
   glVertex3f(pos);
 };
-
-void DrawSphere(const V3f & where, 
+/*
+void DrawSphereFunction(const V3f & where, 
 		float radius, 
 		int steps, 
 		Textured * t){
@@ -55,8 +57,8 @@ void DrawSphere(const V3f & where,
   const float da = PI/steps;
   const float db = PI/steps;
   glBegin(GL_QUADS);
-    for(float b = -PI/2; b < PI/2; b+=db)
-      for(float a = 0; a < 2*PI; a+=da){
+  for(float b = -PI/2; b < PI/2; b+=db)
+    for(float a = 0; a < 2*PI; a+=da){
       DrawSphereVertex( a, b, where, radius,t);
       DrawSphereVertex( a, b+db, where, radius,t);
       DrawSphereVertex( a+da, b+db, where, radius,t);
@@ -66,8 +68,9 @@ void DrawSphere(const V3f & where,
   glDisable(GL_TEXTURE_3D);
 
 };
+*/
 
-//Draw every triangle of the surface
+// Draw every triangle of the surface
 void DrawSurface( const Surface & surf){
   glBegin(GL_TRIANGLES);
   glColor3f(0,1,0);
@@ -75,7 +78,7 @@ void DrawSurface( const Surface & surf){
   for(vector<V3i>::const_iterator i = surf.tri.begin(); i != surf.tri.end(); i++){
     for(int vertex = 0; vertex < 3; vertex++){ //Each verex of a face
       if(colors_valid)glColor3f(surf.c[(*i)[vertex]]);
-      glNormal3f(surf.n[(*i)[vertex]].x, surf.n[(*i)[vertex]].y, surf.n[(*i)[vertex]].z );
+      glNormal3f(-surf.n[(*i)[vertex]].x, -surf.n[(*i)[vertex]].y, -surf.n[(*i)[vertex]].z );
       glVertex3f(surf.v[(*i)[vertex]]);
     }; //Each vertex of a face
   }; //Each face

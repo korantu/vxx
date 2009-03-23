@@ -10,7 +10,10 @@
 *  
 */
 
+#include <stdlib.h>
+
 #include "vxTextured.h"
+#include "vxOpenGlTools.h"
 
 //making compiler shut up; in vain.
 #define BPP 4 

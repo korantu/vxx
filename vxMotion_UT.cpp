@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxDrawPlane_UT.cpp
+* @file vxMotion_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 
@@ -12,12 +12,14 @@
 
 #include <gtest/gtest.h>
 
-#include "vxOpenGlTools.h"
-#include "vxDrawPlane.h"
+#include "vxMotion.h"
 
-TEST(MAIN, DrawPlane){
+/*
+  Total DX, should add up to start-end;
+ */
+TEST(MAIN, BasicMotion){
+  Motion x;
   
 };
 
-
-//End of vxDrawPlane_UT.cpp
+//End of vxMotion_UT.cpp

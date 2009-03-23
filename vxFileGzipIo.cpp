@@ -25,16 +25,17 @@ Io::Io(string content): position_(0) {
 Io::~Io(){};
 
   //technical
-int Io::size(){return content_.size();};
+unsigned int Io::size(){return content_.size();};
 Io & Io::rewind(){position_=0; return *this;};
-int Io::get_position(){return position_;};
+unsigned int Io::get_position(){return position_;};
 
-Io & Io::set_position( int position){
-  if(position < 0 || position > content().size()){
+Io & Io::set_position( unsigned int position){
+  if( position < 0 || position > content().size()){
     valid(false);
   }else{
     position_ = position;
   };
+  return *this;
 };
 
 std::string Io::content(){return content_;};
@@ -43,7 +44,7 @@ std::string Io::content(){return content_;};
 template<class T> 
 Io & Read(Io & in, T * result){
   if ((in.content_.size() - in.position_)>=sizeof(T)) {
-    for (int i = 0; i < sizeof(T); i++) {
+    for (unsigned int i = 0; i < sizeof(T); i++) {
       ((char *)result)[i] = in.content_[in.position_ + sizeof(T) - i - 1];
     };
 
@@ -70,7 +71,7 @@ Io & Write(Io & in, T * result){
     in.content_ += string (sizeof(T), ' '); 
   
   if ((in.size() - in.get_position()) >= sizeof(T)) { //Replace.
-    for (int i = 0; i < sizeof(T); i++){ //Copy bytes.
+    for (unsigned int i = 0; i < sizeof(T); i++){ //Copy bytes.
       in.content_[in.get_position() + sizeof(T) - i - 1] = ((char *)result)[i];
     };
     in.position_ += sizeof(T); // Updating position.
@@ -105,6 +106,7 @@ Io & Io::PutChar(char result){return Write<char>(*this, &result); };
 Io & Io::ReplaceContent(string new_content){
   content_ = new_content;
   rewind();
+  return * this;
 };
 
 //File io.
@@ -164,7 +166,7 @@ string ReadGzipFile(string name){
 bool WriteFile( std::string name, std::string contents){
   FILE* file = fopen(name.c_str(), "wb");
   if (file == NULL) return false;
-  int bytes_written = fwrite(contents.c_str(), 
+  unsigned int bytes_written = fwrite(contents.c_str(), 
 			     1, 
 			     contents.size(), 
 			     file);
@@ -180,7 +182,7 @@ bool WriteGzipFile( std::string name, std::string contents){
   int cnt = gzwrite(fd, contents.c_str(), contents.size());
   gzflush(fd, Z_FINISH);
   gzclose(fd);
-  return (cnt == contents.size());
+  return ((unsigned int)cnt == contents.size());
 };
 
 

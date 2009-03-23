@@ -13,22 +13,22 @@
 #ifndef __vxAction_h__
 #define __vxAction_h__
 
+#include "vxVector.h"
+#include "vxRay.h"
+
 //Each key triggers Start() when pressed,
-//then, with each mouse move Move(),
+//then, with each mouse move Do(),
 //finally, End() is called when released. 
+
+struct Scene;
+//* Interface for an action plugged into the scene itself;
 struct Action {
+  Scene * scene;
   virtual void Start(){};
   virtual void Do(){};
   virtual void End(){};
 
-  struct Motion {
-    int x, y, dx, dy;
-  } motion;
-
-  Action * Init(int x, int y);
-  Action * Move(int x, int y);
-  Action * Done(int x, int y);
-  
+  Action * operator() (Scene *);
 };
 
 #endif // __vxAction_h__

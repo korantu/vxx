@@ -12,6 +12,7 @@
 */
 
 #include <map>
+#include <stdio.h>
 
 #include "vxOpenGlTools.h"
 #include "vxLighting.h"
@@ -29,14 +30,6 @@ using namespace std;
 
 ///KEY-action relationship
 
-map<int, Action *> actions;
-
-int Scene::bind(int key, Action * action ){
-  actions[key] = action;
-  return key;
-};
-
-Action * current_action = 0;
 int current_key = 0;
 
 void InvokeAction(int id);
@@ -49,7 +42,7 @@ void GLFWCALL GLFWMouseButtonCb(int,int){ };
 void GLFWCALL GLFWMouseWheelCb(int pos){ };
 void GLFWCALL GLFWCharCb(int,int){ };
 void GLFWCALL GLFWMousePosCb(int x,int y){
-  if(current_action)current_action->Move(x, y);
+  if(current_action)current_action->UpdateRay()->Move(x, y);
 };
 
 void GLFWCALL GLFWKeyCb(int key, int state){
@@ -71,8 +64,11 @@ void setupCallbacks(){
     glfwSetMouseWheelCallback( GLFWMouseWheelCb );
 };
 
+//Data methods:
 
-Projection projection_state;
+Projection * Scene::get_projection(){
+  return 
+};
 
 int Scene::run(Drawable & scene){
     
@@ -92,47 +88,6 @@ int Scene::run(Drawable & scene){
 
     Lighting lights( & projection_state ); //define lighting.
 
-    struct RotationAction: Action{
-      void Do(){
-	projection_state.Rotate( motion.dy*0.01, motion.dx*0.01);
-      };
-    } rotation_action;
-
-    struct ZoomingAction: Action{
-      int start_x, start_y;
-      void Start(){
-	start_x = motion.x; start_y = motion.y;
-      };
-
-      void Do(){
-	float dx2 = (start_x-motion.x)*(start_x-motion.x); 
-	float dy2 = (start_y-motion.y)*(start_y-motion.y); 
-	float new_zoom = 100.0/(100.0+sqrt(dx2+dy2));
-	projection_state.Zoom( start_x, start_y, new_zoom);
-      };
-    } zooming_action;
-
-    struct HomingAction: Action{
-      int interactive_change;
-      HomingAction():interactive_change(0){};
-      void Reset(){
-	//only change every 30 clicks.
-	interactive_change %= 1000; //to avoid it being too large
-	projection_state.Reset( interactive_change / 30 );
-      }
-
-      void Start(){
-	Reset();
-      };
-
-      void Do(){
-	interactive_change += motion.dx + motion.dy;
-	Reset();
-      };
-
-
-    } homing_action;
-
     bind( GLFW_KEY_LCTRL , & rotation_action );
     bind( GLFW_KEY_TAB , & homing_action );
     bind( GLFW_KEY_LSHIFT , & zooming_action );
@@ -140,7 +95,7 @@ int Scene::run(Drawable & scene){
     do //Main Loop.
       {
 
-       	projection_state.Draw();
+       	projection_state->Draw();
 
 	glScalef(1.0f/64.0, 1.0f/64.0f, 1.0f/64.0f);
 	glDisable (GL_BLEND); 
@@ -178,7 +133,7 @@ void InvokeAction(int id){
   Action * in = actions[id];
   current_action = in;
   int x, y; glfwGetMousePos( &x, &y);
-  in->Init(x, y);   
+  in->UpdateRay()->Init(x, y);
 };
 
 void FinishAction(int id){
@@ -187,7 +142,7 @@ void FinishAction(int id){
     return;              // not some other.
 
   int x, y; glfwGetMousePos( &x, &y);
-  current_action->Done(x, y);
+  current_action->UpdateRay()->Done(x, y);
   current_action = 0;
 };
 

@@ -14,9 +14,14 @@
 #define __vxDrawSurface_h__
 
 #include "vxSurface.h"
+#include "vxTextured.h"
 
-void DrawSurface( const Surface & surf);
-void DrawSurfaceLines( const Surface & surf);
+void DrawSurface( const Surface & surf );
+void DrawSurfaceLines( const Surface & surf );
+void DrawSphereFunction( const V3f & where, 
+			 float radius, 
+			 int steps, 
+			 Textured * t );
 
 #endif // __vxDrawSurface_h__
 

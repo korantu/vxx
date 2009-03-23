@@ -27,9 +27,9 @@ class Io: public Validatable {
   ~Io();
 
   //Technical book keeping.
-  int size();
-  int get_position();
-  Io & set_position(int position);
+  unsigned int size();
+  unsigned int get_position();
+  Io & set_position(unsigned int position);
   std::string content();
 
   Io & rewind();

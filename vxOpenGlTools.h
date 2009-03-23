@@ -34,13 +34,16 @@ struct Drawable {
   virtual void Draw() = 0;
 };
 
+/*
 //Used for determining a point.
 struct Solid{
   V3f Hit(V3f &) const;
 };
+*/
 
+void Transparent(Drawable *);
+void Transparent(bool is); 
  
-
 #endif // __vxOpenGlTools_h__
 
 //End of vxOpenGlTools.h

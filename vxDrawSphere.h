@@ -14,6 +14,7 @@
 #include "vxVector.h"
 #include "vxRange.h"
 #include "vxScene.h"
+#include "vxTextured.h"
 
 //!Draws a sphere upon creation.
 
@@ -37,4 +38,7 @@ private:
   void DrawSphereVertex(float , float);
 
 };
+
+void DrawSphereFunction(const V3f & where, float radius, int steps, Textured * t);
+
 #endif // __vxDrawSphere_h__

@@ -10,9 +10,11 @@
 *  
 */
 
+#include <algorithm>
+
 #include "vxSurface.h"
 #include "vxFileGzipIo.h"
-
+#include "vxSmoothBell.h"
 
 /*** global surface ***/
 Surface __surfaces;
@@ -277,7 +279,7 @@ struct point_set_property{
   point_property min;
   point_property max;
   
-  static const float EPSILON;// = 0.00001; /// epsilon for properties
+  //const float EPSILON = 0.00001; /// epsilon for properties
 
   //find min and max
   point_set_property(const vector<point_property> & in){
@@ -310,14 +312,14 @@ struct point_set_property{
   };
 };
 
-const float point_set_property::EPSILON = 0.00001f;
+//const float point_set_property::EPSILON = 0.00001f;
 
 
 float AnalyzePoint(const V3f & pnt, const V3f & n, FastVolume & volume, V3f & out){
   out.x = volume.SampleCentered(pnt.x+n.x, pnt.y+n.y, pnt.z+n.z);
   out.y = volume.SampleCentered(pnt.x+2*n.x, pnt.y+2*n.y, pnt.z+2*n.z);
   out.z = volume.SampleCentered(pnt.x+3*n.x, pnt.y+3*n.y, pnt.z+3*n.z);
-  float m = min(out);
+  float m = out.min();
   out -= V3f(m, m, m);
   out /= out.length();
   return 0;
@@ -336,6 +338,28 @@ void AnalyzeSurface(Surface & surf, FastVolume & vol){
   };
 }; 
 
+struct usual {
+  V3f direction;
+  Surface * surf;
+  bool operator() (const V3i & a, const V3i & b){
+    return surf->v[b.x].dot(direction) <
+      surf->v[a.x].dot(direction);
+  };
+} comparator;
+
+void Generate(Connectivity & net, Surface & surf){
+  for(int i = 0; i < surf.tri.size(); i++){
+    Link(net, surf.tri[i].x, surf.tri[i].y);
+    Link(net, surf.tri[i].y, surf.tri[i].z);
+    Link(net, surf.tri[i].z, surf.tri[i].x);
+  };
+};
+
+void SortSurface(Surface * surf, V3f direction){
+  comparator.direction = direction;
+  comparator.surf = surf;
+  std::sort(surf->tri.begin(), surf->tri.end() , comparator);
+};
 
 
 //returns color from point property and point set property
@@ -526,6 +550,91 @@ void Propagate(const Connectivity & net, VerticeSet & current, int times){
   };
 };
 
+void GenerateSurface(Surface & surf, V3fMapper & mapper){
+  
+  struct {
+    int size;
+    int index(int x, int y){return (size*(y%size)+(x%size));};
+  }local;
+  
+  // rectangular grid:
+  local.size = 100;
+  for (int row = 0; row < local.size; ++row){
+    for(int col  = 0; col < local.size; ++col){
+      //float fi = ((float)row+(float)col)/10.0f;
+      //float f_sin = sin(fi)*sin(fi)*sin(fi)*sin(fi); f_sin = - f_sin*f_sin*f_sin*20+30*cos((float)row/23)+20*cos((float)col/15); 
+      surf.v.push_back(mapper(V3f(2*(row-local.size/2), 2*(col-local.size/2), 0)));
+      surf.n.push_back(V3f(0,0,0));
+      surf.c.push_back(V3f(0,0,0));
+
+      //Connectivity:
+      if(col + 1 < local.size && row + 1 < local.size){ 
+	surf.tri.push_back(V3i(local.index(col, row),
+			       local.index((col+1), (row+1)),
+			       local.index(col, (row+1))));
+	  
+	surf.tri.push_back(V3i(local.index(col, row),
+			       local.index((col+1), row),
+			       local.index((col+1), (row+1))));
+      };
+    };
+  };
+    
+  FixNormals(surf);
+};
+
+void FixNormals(Surface & surf){
+  for(unsigned int i = 0; i < surf.tri.size(); i++){
+    int a = surf.tri[i].x;
+    int b = surf.tri[i].y;
+    int c = surf.tri[i].z;
+  
+    V3f n; n.cross(surf.v[b]-surf.v[a], surf.v[c]-surf.v[a]);
+    n /= -n.length(); //normal - outside
+
+    surf.n[a] = surf.n[a] + n; 
+    surf.n[b] = surf.n[b] + n; 
+    surf.n[c] = surf.n[c] + n; 
+  };
+
+  for(unsigned int i = 0; i < surf.n.size(); i++){
+    V3f n = surf.n[i];
+    n /= n.length();
+    surf.n[i] = n;
+  };
+
+};
+
+void PushPoint(Surface & surf, V3f point){
+  float error;
+  float near = 1000.0f;
+  float min_dist = 1000.0f;
+  for (unsigned int i = 0; i < surf.v.size(); ++i){
+    V3f cur = surf.v[i];
+    V3f c = cur; c *= 100.0f/c.length();
+    V3f p = point; p *= 100.0f/p.length();
+    float dist = (c-p).length()/10; 
+    if (min_dist < dist) continue;
+    min_dist = dist;
+    if(near > dist){
+      near = dist;
+      V3f n = point; n /= n.length();
+      error = (point - cur).dot(n);
+    };
+  };
+
+  for (unsigned int i = 0; i < surf.v.size(); ++i){
+    V3f cur = surf.v[i];
+    V3f c = cur; c *= 100.0f/c.length();
+    V3f p = point; p *= 100.0f/p.length();
+    float dist = (c-p).length()/10; 
+    if (dist > 1) continue;
+    float change_magnitude = smooth_bell(dist)*dist;
+    V3f proposed = cur; proposed /= proposed.length(); proposed *= change_magnitude+cur.length();
+    surf.v[i] = proposed; 
+  };
+
+};
 
 
 // End of vxSurface.cpp

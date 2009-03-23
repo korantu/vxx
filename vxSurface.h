@@ -20,7 +20,7 @@
 
 #include "vxVector.h"
 #include "vxFileGzipIo.h"
-#include "vxOpenGlTools.h"
+#include "vxFastVolume.h"
 
 //reading a surface from a file
 
@@ -45,6 +45,11 @@ struct Surface{
   V3f offset;
   
   Surface(); 
+};
+
+
+struct GlPoints {
+  FastVolume vol;
 };
 
 Surface * get_active_surfaces();
@@ -101,9 +106,26 @@ void BiLink(Connectivity &, Vertice a, Vertice b);
 
 void Propagate(const Connectivity &, VerticeSet &, int times);
 
+//void Generate(Connectivity &, Surface *);
+
 float AnalyzePoint(const V3f & pnt, const V3f & direction, FastVolume & volume, V3f & out);
 void AnalyzeSurface(Surface & surface, FastVolume & volume);
+
  
+void FixNormals(Surface & surface);
+
+///Intersect:
+struct V3fMapper {
+  virtual V3f operator() (V3f) = 0; //(V3f blah);
+};
+
+void GenerateSurface(Surface & surf , V3fMapper & mapper); //mapper maps a 200x200 grid to a desired surface.
+
+void Generate(Connectivity &, Surface & surf);
+
+void SortSurface(Surface *, V3f direction);
+
+void PushPoint(Surface & surf, V3f point);
 
 #endif // __vxSurface_h__
 

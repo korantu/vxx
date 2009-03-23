@@ -10,7 +10,10 @@
 *  
 */
 
+#include <math.h>
+
 #include "vxRay.h"
+#include "vxSurface.h"
 
 Ray::Ray(const V3f & from, const V3f & direction): O(from), D(direction){};
 Ray::Ray(const Ray & ray): O(ray.O), D(ray.D){};
@@ -30,9 +33,12 @@ Intersection & Intersection::is(bool hit_, float distance_){
    return *this;
 };
 
-Intersection & IntersectRayPlane(const Ray & ray, const Ray & plane, Intersection & result){
+Intersection::Intersection():hit(false){}; //Distance - undefined.
+
+Intersection IntersectRayPlane(const Ray & ray, const Ray & plane){
   //move origin of plane to 0.
 
+  Intersection result;
   V3f dist(plane.O-ray.O);
   //float need_to_travel = dist.dot(plane.D); //along plane normal
   float speed = ray.D.dot(plane.D); //speed of approaching the plane
@@ -42,8 +48,10 @@ Intersection & IntersectRayPlane(const Ray & ray, const Ray & plane, Intersectio
 
 
 // (ray.start+ray.direction*t - center).length() = radius
-Intersection & IntersectRaySphere(const Ray & ray, const V3f & center, float r, Intersection & result){
+Intersection IntersectRaySphere(const Ray & ray, const V3f & center, float r){
+
   //move origin of sphere to 0.
+  Intersection result;
   Ray cur(ray);
   cur.O -= center;
   //  (cur.O.x + cur.d.x*t)^2 = cur.O.x*cur.O.x + 2*cur.D.x*cur.O.x*t+cur.D.x*cur.D.x*t*t
@@ -61,10 +69,26 @@ Intersection & IntersectRaySphere(const Ray & ray, const V3f & center, float r, 
   //  printf("a:%f b:%f c:%f; hence discriminant:%f\n", a, b, c, discriminant);
   if(discriminant < 0)return result.is(false, 0); 
   //interested in positive t's
-  float discriminant_root = sqrtf(discriminant);
+  float discriminant_root = sqrt( discriminant );
   float t1 = (-b + discriminant_root)/(2*a);
   float t2 = (-b - discriminant_root)/(2*a);
-  return result.is(true, (t1 < t2)?t1:t2);
+  result.is(true, (t1 < t2)?t1:t2);
+  return result;
+};
+
+
+Intersection IntersectRaySurface(const Ray & pointer, Surface * surf){  
+  Intersection result;
+  for(int i = 0; i < surf->v.size(); i++){
+    Intersection contact_point = IntersectRaySphere(pointer, surf->v[i], 10);
+    if(contact_point.hit){
+      if(!result.hit){result = contact_point;}else{
+	result = (result.distance > contact_point.distance)?
+	  contact_point:result;
+      };
+    };
+  };
+  return result;
 };
 
 
