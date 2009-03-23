@@ -19,7 +19,11 @@
 #include "vxDrawSurface.h"
 #include "vxLoader.h"
 #include "vxSurface.h"
+#include "vxMotion.h"
+#include "vxRay.h"
+#include "vxProjection.h"
 
+/*
 TEST(MAIN, Textured){
   //TODO - remove if done in vxDrawSphere_UT.h
   FastVolume vol;
@@ -28,7 +32,7 @@ TEST(MAIN, Textured){
   Textured tex;
   tex.texturing_fastvolume = &vol; 
 
-  struct TexturedSphere: public Drawable{
+  struct TexturedSphere: Action {
     FastVolume * vol;
     Textured * tex;
     
@@ -36,9 +40,9 @@ TEST(MAIN, Textured){
       V3f center;
       MovingAction():center(0,0,0){};
       void Do(){
-	Intersection isct = IntersectRaySphere(motion.sight, V3f(0,0,0), 60);
+	Intersection isct = IntersectRaySphere(GetMotion()->sight, V3f(0,0,0), 60);
 	if(isct.hit){
-	  center = motion.sight.Travel(isct.distance);
+	  center = GetMotion()->sight.Travel(isct.distance);
 	};
       }
     }pointer;
@@ -47,7 +51,7 @@ TEST(MAIN, Textured){
       DrawSphereFunction( pointer.center, 30, 30, tex);
       glColor4f(0.5f,0.5f,0.5f,0.5f);
       glDisable(GL_TEXTURE);
-      Transparent(&DrawSphere(V3f(0,0,0), 60, 60));
+      DrawSphere(V3f(0,0,0), 60, 60).Draw();
     };
 
     TexturedSphere(FastVolume * _vol, Textured * _tex):vol(_vol), tex(_tex){};
@@ -55,25 +59,42 @@ TEST(MAIN, Textured){
   } scene(&vol, &tex); 
 
 
-  Scene::bind(GLFW_KEY_RCTRL, &scene.pointer);
-  Scene::run(scene);
+  scene.pointer.bind(GLFW_KEY_RCTRL);
+  GetScene()->run( & scene);
 };
+*/
 
 //TODO - figure out where to drop this shit.
 
+
+V3f center;
+Surface surf;
+FastVolume vol;
+Textured tex;
+
 struct SurfacePointer: Action {
+  
   void Do(){
-    Scene::surface
-    Intersection isct = IntersectRaySurface(motion.sight, &surf);
+    Intersection isct = IntersectRaySurface(GetMotion()->sight, &surf);
     if(isct.hit){
-      center = motion.sight.Travel(isct.distance);
+      center = GetMotion()->sight.Travel(isct.distance);
       center *= 0.8;
     };
-  }
+    
+  };
+} sphere_placer;
 
-private:
-  Surface * surf;
-};
+struct PushingAction: Action {
+  void Do(){
+    Intersection isct = IntersectRaySphere(GetMotion()->sight, center, 30);
+    if(isct.hit){
+      V3f pos = GetMotion()->sight.Travel(isct.distance);
+      PushPoint(surf, pos);
+      FixNormals(surf);
+      AnalyzeSurface(surf, vol);
+    };
+  }
+} pusher;
 
 
 TEST(MAIN, BrainTextured){
@@ -86,41 +107,20 @@ TEST(MAIN, BrainTextured){
 
   AnalyzeSurface(surf, vol);
 
-  struct TexturedSphere: public Drawable{
-
-    struct PushingAction: Action {
-      void Do(){
-        Intersection isct = IntersectRaySphere(motion.sight, center, 30);
-        if(isct.hit){
-	  pos = motion.sight.Travel(isct.distance);
-	  PushPoint(surf, pos);
-	  FixNormals(surf);
-	  AnalyzeSurface(surf, vol);
-	};
-      }
-    }pusher;
-
-    struct Surfacer :Action {
-      bool is_transparent;
-      void Start(){is_transparent=!is_transparent;}
-      Surfacer():is_transparent(false){};
-    } surfacer;
+  struct TexturedSphere: public Action {
 
     void Draw(){
       DrawSphereFunction( center, 30, 30, &tex);
       glColor4f(0.5f,0.5f,0.5f,0.5f);
-      Transparent(surfacer.is_transparent);
-      SortSurface(&surf, Scene::getProjection()->Z());
+      SortSurface(&surf, GetProjection()->Z());
       DrawSurface(surf);
-      Transparent(false);
     };
 
   } scene; 
-
-  Scene::bind(GLFW_KEY_F2, &scene.surfacer);
-  Scene::bind(GLFW_KEY_F3, &scene.pusher);
-  Scene::bind(GLFW_KEY_RCTRL, &scene.pointer);
-  Scene::run(scene);
+  
+  sphere_placer.bind(GLFW_KEY_RCTRL);
+  pusher.bind(GLFW_KEY_F2);
+  GetScene()->run( & scene );
 };
 
 
