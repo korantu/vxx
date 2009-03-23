@@ -12,7 +12,7 @@
 
 #include <gtest/gtest.h>
 
-#include "vxTest.h"
+//#include "vxTest.h"
 
 struct A{
   int b;

@@ -37,22 +37,16 @@ const V3f & SetColor(const V3f & v){
   glColor3f(v.x, v.y, v.z); return v;
 };
 
-void Transparent(Drawable * object){
-  Transparent(true);
-  object->Draw();
-  Transparent(false);
-};
-
-void Transparent(bool is){
-  if(is){
+void TransparencyStart(){
     glEnable(GL_BLEND);
     glDisable(GL_LIGHTING);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
-  }else{
-    glDisable(GL_BLEND);
-    glEnable(GL_LIGHTING);
-  };
+};
+
+void TransparencyEnd(){
+  glDisable(GL_BLEND);
+  glEnable(GL_LIGHTING);
 };
 
 // End of vxOpenGlTools.cpp

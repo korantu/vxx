@@ -15,7 +15,7 @@
 
 #include "vxOpenGlTools.h"
 
-struct Projection: Drawable {
+struct Projection {
 
   Projection(); // Resetting the thing.
 
@@ -39,24 +39,10 @@ struct Projection: Drawable {
   void Zoom( int x, int y, float times);
   void Reset( int N = 0);
 
-  virtual void Draw();
+  void Draw();
 };
 
-///The following actually uses Projection, but it is \-* away.
-struct HomingAction: Action {
-  int interactive_change;
-  HomingAction();
-};
-
-struct ZoomingAction: Action {
-  int start_x, start_y;
-  void Start();
-  void Do();
-};
-
-struct RotationAction: Action {
-  void Do();
-};
+Projection * GetProjection();
 
 
  

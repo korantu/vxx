@@ -18,7 +18,7 @@
 
 //!Draws a sphere upon creation.
 
-struct DrawSphere: public Drawable { 
+struct DrawSphere { 
   DrawSphere(V3f where, 
 	     float radius, 
 	     int steps);

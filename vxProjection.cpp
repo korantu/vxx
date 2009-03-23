@@ -91,48 +91,9 @@ void Projection::Draw(){
   glLoadMatrixd(matrix);
 };
 
-//[TODO] //implement the actions.
-
-HomingAction::HomingAction(): interactive_change(0){};
-
-void HomingAction::Reset(){
-//only change every 30 clicks.
-  scene->getProjection()->Reset ( interactive_change / 30 );
-}
-  
-void HomingAction::Start() {
-  Reset();
+Projection the_projection;
+Projection * GetProjection(){
+  return & the_projection;
 };
-  
-  void Do() {
-    interactive_change += motion.dx + motion.dy;
-    Reset();
-  };  
-};
-
-struct ZoomingAction: Action {
-  int start_x, start_y;
-  void Start(){
-    start_x = motion.x; start_y = motion.y;
-  };
-
-  void Do(){
-    float dx2 = (start_x-motion.x)*(start_x-motion.x); 
-    float dy2 = (start_y-motion.y)*(start_y-motion.y); 
-    float new_zoom = 100.0/(100.0+sqrt(dx2+dy2));
-    scene->get_projection()->Zoom( start_x, start_y, new_zoom);
-  };
-} zooming_action;
-
-
-struct RotationAction: Action {
-  void Do(){
-    projection_state.Rotate( motion.dy*0.01, motion.dx*0.01);
-  };
-};
-
-
-
-RotationAction
 
 // End of vxProjection.cpp

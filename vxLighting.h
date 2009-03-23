@@ -13,16 +13,7 @@
 #ifndef __vxLighting_h__
 #define __vxLighting_h__
 
-#include "vxOpenGlTools.h"
-#include "vxProjection.h"
-
-struct Lighting: Drawable {
-  Projection * scene_projection;
-  
-  Lighting(Projection *);
-  
-  void Draw();
-};
+void DrawLighting();
 
 #endif // __vxLighting_h__
 

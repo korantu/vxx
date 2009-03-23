@@ -11,8 +11,11 @@
 */
 
 #include <stdio.h>
+#include <map>
 
 #include "vxAction.h"
+
+using namespace std;
 
 ///Storage for actions.
 
@@ -20,23 +23,19 @@ typedef map<int, Action *> __global_actions_storage__;
 __global_actions_storage__  __global_actions__;
 
 ///Put an action in starage
-int Action::bind(int key, Action * action){
-  __global_actions__[key] = action;
-  return key;
+Action * Action::bind(int key){
+  __global_actions__[key] = this;
+  return this;
 };
 
 ///Get and use it... presumably only by Scene (?)
-Action * Action::get(int key){
+Action * GetAction(int key){
   __global_actions_storage__::iterator i = __global_actions__.find(key);
-  if(i != actions.end()){
-    return i.second; 
+  if(i != __global_actions__.end()){
+    return i->second; 
   }else{
     return NULL;
   };
 };
 
-Action * Action::operator() (Scene * _scene) {
-  scene = _scene;
-  return this;
-};
 // End of vxAction.cpp

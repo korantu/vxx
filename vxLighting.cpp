@@ -10,14 +10,9 @@
 *  
 */
 
-#include "vxLighting.h"
 #include "vxProjection.h"
 
-Lighting::Lighting(Projection * _proj){
-  scene_projection = _proj;
-};
-
-void Lighting::Draw(){
+void DrawLighting(){
       glEnable(GL_NORMALIZE);
       glEnable(GL_LIGHTING);
       glEnable(GL_LIGHT0);
@@ -36,9 +31,9 @@ void Lighting::Draw(){
       glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
       //Light position
-      V3f lp(scene_projection->Z()); lp *= 1; 
-      lp += scene_projection->X()*0.8; 
-      lp += scene_projection->Y()*0.8;
+      V3f lp(GetProjection()->Z()); lp *= 1; 
+      lp += GetProjection()->X()*0.8; 
+      lp += GetProjection()->Y()*0.8;
       lp *= 250;
 
       float position[] = {lp.x, lp.y, lp.z, 1};
