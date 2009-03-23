@@ -13,24 +13,20 @@
 #include <gtest/gtest.h>
 
 #include "vxScene.h"
+#include "vxAction.h"
 #include "vxDrawSphere.h"
 
-TEST(MAIN, Scene){
-  
-};
+
+struct TestSimpleScene: public Action{
+  virtual void Draw(){
+    DrawSphere( V3f(0.0f, 0.0f, 0.0f) , 80.0f, 8).Draw();
+  };
+}; 
 
 
-//Basic interface test. (Probably redundant.)
-TEST(OGL, Navigator){
-  struct: public Drawable{
-    void Draw(){
-      V3f c(V3f(0.0f, 0.0f, 0.0f));
-      c /= 2;
-
-      DrawSphere( c, 80.0f, 8).Draw();
-    };
-  } scene; 
-  Scene::run(scene);
+TEST(Interactive, Navigator){
+  TestSimpleScene a;
+  GetScene()->run((Action *)&a);
 };
 
 
