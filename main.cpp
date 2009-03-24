@@ -88,6 +88,15 @@ struct PushingAction: Action {
 } pusher;
 
 
+struct UnPushingAction: Action {
+  void Start(){
+      UndoPushPoint(surf);
+      FixNormals(surf);
+      AnalyzeSurface(surf, vol);
+  }
+} unpusher;
+
+
 struct SavingAction: Action {
   void Start(){
     printf("Saving...\n");
@@ -121,6 +130,7 @@ int main(){
   sphere_placer.bind(GLFW_KEY_RCTRL);
   sphere_sizer.bind(GLFW_KEY_F3);
   pusher.bind(GLFW_KEY_F2);
+  unpusher.bind(GLFW_KEY_F1);
 
   sphere_tuner_xy.bind('.');
   sphere_tuner_z.bind(',');

@@ -658,25 +658,41 @@ float DistanceSphere(V3f a, V3f b){
   return (a-b).length();
 };
 
-V3f ProposedPosition(V3f a, V3f point){
-  float l = point.length();
-  a /= a.length(); a *= l;
-  return a;
+struct UndoPoint {
+  int pos;
+  V3f vec;
 };
 
+typedef std::vector<UndoPoint> action_t;
+std::vector<action_t> __undo_push_point_storage__; 
+
+void UndoPushPoint(Surface & surf){
+  if(__undo_push_point_storage__.size() == 0)return;
+  action_t to_undo =  __undo_push_point_storage__.back();
+  __undo_push_point_storage__.pop_back();
+  for(action_t::iterator i = to_undo.begin(); i != to_undo.end(); i++){
+    surf.v[i->pos] = i->vec;
+  };
+};
 
 //Push a surface to go through a point.
 void PushPoint(Surface & surf, V3f point){
+  action_t to_undo;
   float radius = 6; //modification radius
   for(int i = 0; i < surf.v.size(); i++){
     float proportion = SmoothBell ( DistanceSphere ( point, surf.v[i] ) / radius );
     if ( proportion > 0.01f ) {
       float l = surf.v[i].length();
-      surf.v[i] /= surf.v[i].length();
-      l = proportion * point.length() + (1.0f - proportion) * l;
-      surf.v[i] *= l;
+      if(l > point.length()){ //We only do push, not pull.
+	UndoPoint undo = { i, surf.v[i]};
+	to_undo.push_back( undo );
+	surf.v[i] /= surf.v[i].length();
+	l = proportion * point.length() + (1.0f - proportion) * l;
+	surf.v[i] *= l;
+      };
     };
   };
+  if(to_undo.size() != 0) __undo_push_point_storage__.push_back(to_undo);
 };
 
 
