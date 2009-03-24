@@ -34,7 +34,20 @@ void clear(Surface & in){
 
 Surface::Surface() : offset(V3f(0,0,0)) {};
   
+bool WritePialHeader(Io & data, int vertices, int triangles){
+  //Signature
+  const char signature[3] = {0xff, 0xff, 0xfe};
+  for (int i = 0 ; i < 3; ++i) data.PutChar(signature[i]);
 
+  data.PutChar(0x0a);
+  data.PutChar(0x0a);
+
+  //Vertices
+  
+  data.PutInt(vertices).PutInt(triangles);
+
+  return true;
+};
 
 bool ReadPialHeader(Io & data, int * vertices, int * triangles){
 
@@ -66,14 +79,45 @@ bool ReadPialHeader(Io & data, int * vertices, int * triangles){
   
 };
 
-bool read_surface_binary(Surface & surf, std::string name){
+/* almost as if we read, but once we verify - start writing. */
+bool write_surface_binary_template(Surface * surf, std::string name, std::string contents){
+  int vertices_number;     //for the number of vertices
+  int triangles_number;       //for the number of triangles
+  bool result = true;
+  Io data(contents);
+  if(!ReadPialHeader(data, &vertices_number, &triangles_number))return false;
+
+  if(surf->v.size() != vertices_number ||
+     surf->tri.size() != triangles_number ) return false; //File mismatch
+  
+  //ok, now write the stuff back
+  //Points
+  for(int i = 0; i < vertices_number; i++){
+    V3f out = surf->v[i];
+    out = V3f(-out.x, +out.z, +out.y); //Jumping the same hoops;
+    data.PutFloat(out.x).PutFloat(out.y).PutFloat(out.z);
+  };
+  //Tris
+  for(int i = 0; i < triangles_number; i++){
+    data.PutInt(surf->tri[i].x).
+         PutInt(surf->tri[i].y).
+         PutInt(surf->tri[i].z);
+  };
+ 
+  if(data.valid()) WriteFile(name, contents);
+
+  return data.valid();
+};
+
+bool read_surface_binary_from_string(Surface & surf, std::string content){
+
   int vertices_number;     //for the number of vertices
   int triangles_number;       //for the number of triangles
   bool result = true;
 
   int start_index = surf.v.size();
 
-  Io data(ReadFile(name));
+  Io data(content);
 
   if(!ReadPialHeader(data, &vertices_number, &triangles_number))return false;
 
@@ -125,6 +169,10 @@ bool read_surface_binary(Surface & surf, std::string name){
   
   return true;
 
+};
+
+bool read_surface_binary(Surface & surf, std::string name){
+  return read_surface_binary_from_string(surf, ReadFile(name));
 };
 
 V3f find_center_point(const Surface & surf)
