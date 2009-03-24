@@ -14,6 +14,7 @@ V3f center(0,0,0); //Where the center of the crrossecting object is located.
 float radius = 30; //Its radius.
 float depth_correction = 0.8f; //How deep it is; 1 - on the surface, 0 - in the center.
 
+std::string contents;
 Surface surf; 
 FastVolume vol;
 Textured tex;
@@ -87,11 +88,20 @@ struct PushingAction: Action {
 } pusher;
 
 
+struct SavingAction: Action {
+  void Start(){
+    printf("Saving...\n");
+    write_surface_binary_template(&surf, "data/lh_test.pial", contents);
+    };
+} saver;
+
 int main(){
   //TODO - remove if done in vxDrawSphere_UT.h
   MgzLoader mri(vol);
   mri.Load("data/brainmask.mgz");
-  read_surface_binary(surf, "data/lh.pial");
+
+  contents = ReadFile("data/lh.pial");
+  read_surface_binary_from_string(surf, contents);
 
   tex.texturing_fastvolume = &vol; 
 
@@ -114,6 +124,7 @@ int main(){
 
   sphere_tuner_xy.bind('.');
   sphere_tuner_z.bind(',');
+  saver.bind(GLFW_KEY_F8);
 
   GetScene()->run( & scene );
 

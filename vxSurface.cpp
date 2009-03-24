@@ -104,7 +104,7 @@ bool write_surface_binary_template(Surface * surf, std::string name, std::string
          PutInt(surf->tri[i].z);
   };
  
-  if(data.valid()) WriteFile(name, contents);
+  if(data.valid()) WriteFile(name, data.content());
 
   return data.valid();
 };

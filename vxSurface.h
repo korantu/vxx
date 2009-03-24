@@ -66,6 +66,8 @@ void surface_sort(V3f direction);
 //bool read_surface(Surface & surf, std::string name); 
 bool read_surface_binary(Surface & surf, std::string name); 
 bool write_surface_binary_template(Surface * surf, std::string name, std::string contents);
+bool read_surface_binary_from_string(Surface & surf, std::string content);
+
 
 bool ReadPialHeader(Io & data, int * vertices, int * triangles);
 /*

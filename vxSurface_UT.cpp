@@ -221,11 +221,16 @@ TEST(MAIN, Loading){
 
   EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
   system("rm data/lh_saved.pial");
+  surf.tri[0].x = 1234;
+  surf.v[34].x = 1234.0f;
   EXPECT_TRUE(write_surface_binary_template(&surf, "data/lh_saved.pial", contents));
   EXPECT_TRUE(read_surface_binary(surf2, "data/lh_saved.pial"));
 
   EXPECT_EQ(surf.v.size(), surf2.v.size());
   EXPECT_EQ(surf.tri.size(), surf2.tri.size());
+  EXPECT_EQ(1234, surf2.tri[0].x);
+  EXPECT_FLOAT_EQ(1234.0f, surf2.v[34].x);
+  
 };
 
 TEST(MAIN, SortSurface){
