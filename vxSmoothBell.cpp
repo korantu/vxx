@@ -12,7 +12,7 @@
 
 #include "vxSmoothBell.h"
 
-float smooth_bell(float x){
+float SmoothBell(float x){
 	if(x<0.0f)x=-x;
 	if(x>1.0f)return 0.0f;
 	float square_x = x*x;

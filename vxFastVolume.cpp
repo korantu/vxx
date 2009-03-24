@@ -576,13 +576,13 @@ void FastVolume::propagate_spread(int threshold, int dist, int max_depth, int ti
     for(std::vector<step>::iterator i = steps.begin(); i != steps.end(); i++){
       step the_step = *i;
       float delta =  vol[the_step.to]-vol[the_step.from]; delta = (delta>0)?delta:-delta;
-      float in_band = smooth_bell((vol[the_step.to]-band_center)/half_band_size);
+      float in_band = SmoothBell((vol[the_step.to]-band_center)/half_band_size);
       float friends=0;
       for(int k = 0; k < 26; k++){
 	if(mask[the_step.to+neighbours[k]] & MASK)friends+=1;
       };
       
-      friends=friends/27.0f; //smooth_bell(friends-9.0/30)*smooth_bell((friends-9.0)/30);
+      friends=friends/27.0f; //SmoothBell(friends-9.0/30)*smooth_bell((friends-9.0)/30);
 
       //depth factor
       float f_depth = 0.1f;
@@ -597,7 +597,7 @@ void FastVolume::propagate_spread(int threshold, int dist, int max_depth, int ti
       getCoords(the_step.to, x, y, z);
       V3f cur((float)x,(float)y,(float)z);
       //distance; [1-0], 1 - closest, 0 - furtherst
-      float distance = smooth_bell((center-cur).length()/50);  
+      float distance = SmoothBell((center-cur).length()/50);  
       if(!use_scope)distance = 1.0;
 
 

@@ -186,6 +186,7 @@ void InvokeAction(int id){
 void RepeatAction(int x, int y){
   if(!current_key)return;
   Action * in = GetAction(current_key); if(!in) return; //Don't know what to do with this action.
+  glfwGetMousePos( &x, &y);
   GetMotion()->UpdateRay()->Move(x, y);
   in->Do();
 };
