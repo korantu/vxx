@@ -605,35 +605,30 @@ void FixNormals(Surface & surf){
 
 };
 
+/// Distance on a sphere. TODO dependency on normals
+float DistanceSphere(V3f a, V3f b){
+  return (a-b).length();
+};
+
+V3f ProposedPosition(V3f a, V3f point){
+  float l = point.length();
+  a /= a.length(); a *= l;
+  return a;
+};
+
+
+//Push a surface to go through a point.
 void PushPoint(Surface & surf, V3f point){
-  float error;
-  float near = 1000.0f;
-  float min_dist = 1000.0f;
-  for (unsigned int i = 0; i < surf.v.size(); ++i){
-    V3f cur = surf.v[i];
-    V3f c = cur; c *= 100.0f/c.length();
-    V3f p = point; p *= 100.0f/p.length();
-    float dist = (c-p).length()/10; 
-    if (min_dist < dist) continue;
-    min_dist = dist;
-    if(near > dist){
-      near = dist;
-      V3f n = point; n /= n.length();
-      error = (point - cur).dot(n);
+  float radius = 6; //modification radius
+  for(int i = 0; i < surf.v.size(); i++){
+    float proportion = SmoothBell ( DistanceSphere ( point, surf.v[i] ) / radius );
+    if ( proportion > 0.01f ) {
+      float l = surf.v[i].length();
+      surf.v[i] /= surf.v[i].length();
+      l = proportion * point.length() + (1.0f - proportion) * l;
+      surf.v[i] *= l;
     };
   };
-
-  for (unsigned int i = 0; i < surf.v.size(); ++i){
-    V3f cur = surf.v[i];
-    V3f c = cur; c *= 100.0f/c.length();
-    V3f p = point; p *= 100.0f/p.length();
-    float dist = (c-p).length()/10; 
-    if (dist > 1) continue;
-    float change_magnitude = smooth_bell(dist)*dist;
-    V3f proposed = cur; proposed /= proposed.length(); proposed *= change_magnitude+cur.length();
-    surf.v[i] = proposed; 
-  };
-
 };
 
 
