@@ -45,6 +45,7 @@ struct : Action {
   };
 } sphere_tuner_z;
 
+
 struct : Action {
   void Do(){
     center += GetProjection()->X() * ((float)GetMotion()->dx / 2.0); 
@@ -154,19 +155,20 @@ int main(){
 
   } scene; 
   
-  surface_switcher.bind(GLFW_KEY_F4);
+  surface_switcher.bind('T');
 
-  sphere_placer.bind(GLFW_KEY_RCTRL);
-  sphere_sizer.bind(GLFW_KEY_F3);
-  PushingAction pusher(true); pusher.bind(GLFW_KEY_F2);
-  PushingAction puller(false); puller.bind(GLFW_KEY_F5);
-  smoother.bind(GLFW_KEY_F6);
   unpusher.bind(GLFW_KEY_F1);
+  PushingAction pusher(true); pusher.bind(GLFW_KEY_F2);
+  PushingAction puller(false); puller.bind(GLFW_KEY_F3);
+  smoother.bind(GLFW_KEY_F4);
 
 
-  sphere_tuner_xy.bind('.');
-  sphere_tuner_z.bind(',');
-  saver.bind(GLFW_KEY_F8);
+  sphere_placer.bind('R');
+  sphere_sizer.bind('E');
+  sphere_tuner_xy.bind('W');
+  sphere_tuner_z.bind('Q');
+
+  saver.bind('S');
 
   GetScene()->run( & scene );
 
