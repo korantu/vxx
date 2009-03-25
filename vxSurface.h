@@ -131,6 +131,10 @@ void SortSurface(Surface *, V3f direction);
 void PushPoint(Surface & surf, V3f point, bool push);
 void UndoPushPoint(Surface & surf);
 
+void SmoothAdvanced(Surface & surf, Connectivity & net, VerticeSet & where);
+void SmoothSurfaceAtPoint(Surface * surf, V3f point);
+
+
 #endif // __vxSurface_h__
 
 //End of vxSurface.h

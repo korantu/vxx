@@ -675,7 +675,7 @@ void UndoPushPoint(Surface & surf){
   };
 };
 
-//Push a surface to go through a point.
+//Push or pull a surface to go through a point.
 void PushPoint(Surface & surf, V3f point, bool push){
   action_t to_undo;
   float radius = 6; //modification radius
@@ -693,6 +693,61 @@ void PushPoint(Surface & surf, V3f point, bool push){
     };
   };
   if(to_undo.size() != 0) __undo_push_point_storage__.push_back(to_undo);
+};
+
+int NearestPointIndex(Surface * surf, V3f point){
+  int nearest_index = 0;
+  float nearest_distance = 10000.0f; //A couple hundred million miles.
+  
+  for(int i = 0; i < surf->v.size(); i++){
+    float dist = (surf->v[i] - point).length();
+    if( dist < nearest_distance ){
+      nearest_index = i;
+      nearest_distance = dist;
+    };
+  };
+  return nearest_index;
+}; 
+
+//Uses existing connectivity.
+void SmoothAdvanced(Surface & surf, Connectivity & net, VerticeSet & where){
+    
+  vector<V3f> modified = surf.v;
+  
+  for (VerticeSet::iterator to_move = where.begin(); 
+       to_move != where.end(); to_move++){
+    V3f neighbours(0,0,0);
+    VerticeSet a = net.find(*to_move)->second;
+    //average neighbors
+    float min_dist = surf.v[*(a.begin())].length();
+    float max_dist = surf.v[*(a.begin())].length();
+    for(VerticeSet::iterator v = a.begin(); v != a.end(); v++){
+      neighbours+=surf.v[*v];
+      float l = surf.v[*v].length();
+      min_dist = (min_dist>l) ? l : min_dist;
+      max_dist = (max_dist<l) ? l : max_dist;
+    };
+    //neighbours /= (float)a.size();
+    neighbours /= neighbours.length();
+    neighbours *= (min_dist+max_dist)/2;
+    //add them to the vertex
+    modified[*to_move] = neighbours;
+    
+  };//yulia & kostya
+
+  surf.v = modified; //put it back.
+};
+
+
+void SmoothSurfaceAtPoint(Surface * surf, V3f point){
+  VerticeSet new_border;
+  Connectivity net; 
+  Generate(net, *surf);
+
+  new_border.insert(NearestPointIndex(surf, point));
+  Propagate(net, new_border, 6);
+
+  SmoothAdvanced(*surf, net, new_border);
 };
 
 

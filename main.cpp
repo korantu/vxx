@@ -81,22 +81,39 @@ struct : Action {
     
 } sphere_sizer;
 
+struct PickingAction: Action {
 
-struct PushingAction: Action {
-  bool push;
-
-  PushingAction(bool _push):push(_push){};
+  virtual void Modify(Surface * surf, V3f pos) = 0;
 
   void Start(){
     Intersection isct = IntersectRaySphere(GetMotion()->sight, center, radius);
     if(isct.hit){
       V3f pos = GetMotion()->sight.Travel(isct.distance);
-      PushPoint(surf, pos, push);
       FixNormals(surf);
+      Modify(&surf, pos); //Call for the modification.
       AnalyzeSurface(surf, vol);
     };
   };
 };
+
+struct PushingAction: PickingAction {
+  bool push;
+
+  PushingAction(bool _push):push(_push){};
+
+  virtual void Modify(Surface * surf, V3f pos){
+      PushPoint(*surf, pos, push);
+  };
+
+};
+
+struct SmoothingAction: PickingAction {
+  virtual void Modify(Surface * surf, V3f pos){
+    SmoothSurfaceAtPoint( surf, pos);
+  };
+} smoother;
+
+
 
 struct UnPushingAction: Action {
   void Start(){
@@ -143,6 +160,7 @@ int main(){
   sphere_sizer.bind(GLFW_KEY_F3);
   PushingAction pusher(true); pusher.bind(GLFW_KEY_F2);
   PushingAction puller(false); puller.bind(GLFW_KEY_F5);
+  smoother.bind(GLFW_KEY_F6);
   unpusher.bind(GLFW_KEY_F1);
 
 

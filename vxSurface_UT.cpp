@@ -80,33 +80,6 @@ void Smooth(Surface & surf, VerticeSet where){
 
 };
 
-void SmoothAdvanced(Surface & surf, Connectivity & net, VerticeSet & where){
-    
-  vector<V3f> modified = surf.v;
-  
-  for (VerticeSet::iterator to_move = where.begin(); 
-       to_move != where.end(); to_move++){
-    V3f neighbours(0,0,0);
-    VerticeSet a = net.find(*to_move)->second;
-    //average neighbors
-    float min_dist = surf.v[*(a.begin())].length();
-    float max_dist = surf.v[*(a.begin())].length();
-    for(VerticeSet::iterator v = a.begin(); v != a.end(); v++){
-      neighbours+=surf.v[*v];
-      float l = surf.v[*v].length();
-      min_dist = (min_dist>l) ? l : min_dist;
-      max_dist = (max_dist<l) ? l : max_dist;
-    };
-    //neighbours /= (float)a.size();
-    neighbours /= neighbours.length();
-    neighbours *= (min_dist+max_dist)/2;
-    //add them to the vertex
-    modified[*to_move] = neighbours;
-    
-  };//yulia & kostya
-
-  surf.v = modified; //put it back.
-};
 
 
 //Drawing a surface.
