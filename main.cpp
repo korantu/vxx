@@ -8,7 +8,7 @@
 #include "vxMotion.h"
 #include "vxRay.h"
 #include "vxProjection.h"
-
+#include "vxPlatform.h"
 
 bool show_surface = true;
 V3f center(0,0,0); //Where the center of the crrossecting object is located.
@@ -20,11 +20,19 @@ Surface surf;
 FastVolume vol;
 Textured tex;
 
+void LoadPatient(std::string filename);
 
 struct : Action {
   void Start(){ show_surface = !show_surface; };
 } surface_switcher;
 
+
+struct : Action {
+  void Start(){
+    std::string editable = putFile();
+    if(editable.size() == 0)return; //nothing given.
+    LoadPatient(editable); };
+} patient_loader;
 
 struct : Action {
   
@@ -132,17 +140,22 @@ struct SavingAction: Action {
     };
 } saver;
 
-int main(){
+void LoadPatient(std::string patient){
   //TODO - remove if done in vxDrawSphere_UT.h
   MgzLoader mri(vol);
-  mri.Load("data/t1.mgz");
+  mri.Load(patient+"/data/t1.mgz");
 
-  contents = ReadFile("data/lh.pial");
+  contents = ReadFile(patient+"/data/lh.pial");
   read_surface_binary_from_string(surf, contents);
 
   tex.texturing_fastvolume = &vol; 
 
   AnalyzeSurface(surf, vol);
+};
+
+int main(int argc, char ** argv){
+
+  LoadPatient(".");
 
   struct TexturedSphere: public Action {
 
@@ -168,6 +181,7 @@ int main(){
   sphere_tuner_xy.bind('W');
   sphere_tuner_z.bind('Q');
 
+  patient_loader.bind('P');
   saver.bind('S');
 
   GetScene()->run( & scene );
