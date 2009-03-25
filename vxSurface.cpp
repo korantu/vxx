@@ -676,14 +676,14 @@ void UndoPushPoint(Surface & surf){
 };
 
 //Push a surface to go through a point.
-void PushPoint(Surface & surf, V3f point){
+void PushPoint(Surface & surf, V3f point, bool push){
   action_t to_undo;
   float radius = 6; //modification radius
   for(int i = 0; i < surf.v.size(); i++){
     float proportion = SmoothBell ( DistanceSphere ( point, surf.v[i] ) / radius );
     if ( proportion > 0.01f ) {
       float l = surf.v[i].length();
-      if(l > point.length()){ //We only do push, not pull.
+      if(push?(l > point.length()):(l < point.length())){ //We only do push or pool, not both.
 	UndoPoint undo = { i, surf.v[i]};
 	to_undo.push_back( undo );
 	surf.v[i] /= surf.v[i].length();

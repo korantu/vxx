@@ -128,7 +128,7 @@ void Generate(Connectivity &, Surface & surf);
 
 void SortSurface(Surface *, V3f direction);
 
-void PushPoint(Surface & surf, V3f point);
+void PushPoint(Surface & surf, V3f point, bool push);
 void UndoPushPoint(Surface & surf);
 
 #endif // __vxSurface_h__
