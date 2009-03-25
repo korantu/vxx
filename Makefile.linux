@@ -11,7 +11,7 @@ GTEST_STATIC:=/home/kdl/projects/gtest/gtest/lib/.libs/libgtest_main.a /home/kdl
 GTEST_INCLUDE:=/home/kdl/projects/gtest/gtest/include
 
 
-LINKFLAGS := -lGL -lGLU -lXrandr -lz -lm
+LINKFLAGS := -lGL -lGLU -lXrandr -lm -lz
 CXXFLAGS := -DLINUX
 
 ETAGSFLAGS := --declarations
