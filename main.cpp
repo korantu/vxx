@@ -73,7 +73,7 @@ struct : Action {
   };
 
   void Do(){
-    float center_factor = ( (float)GetMotion() -> y - y_old ) / 100.0f;
+    float center_factor = - ( (float)GetMotion() -> y - y_old ) / 100.0f;
     float radius_factor = ( (float)GetMotion() -> x - x_old ) / 100.0f;
     V3f center_new = center_old * (1.0f + center_factor);
     float radius_new = radius_old * (1.0f - radius_factor);
