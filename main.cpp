@@ -21,6 +21,11 @@ Surface surf;
 FastVolume vol;
 Textured tex;
 
+struct Kerneler : Action {
+  int val;
+  void Init(int _val){val = _val;};
+  void Start(){kernel = val;};
+};
 
 struct : Action {
   void Start(){ show_surface = !show_surface; };
@@ -103,14 +108,14 @@ struct PushingAction: PickingAction {
   PushingAction(bool _push):push(_push){};
 
   virtual void Modify(Surface * surf, V3f pos){
-      PushPoint(*surf, pos, push);
+    PushPoint(*surf, pos, push, kernel);
   };
 
 };
 
 struct SmoothingAction: PickingAction {
   virtual void Modify(Surface * surf, V3f pos){
-    SmoothSurfaceAtPoint( surf, pos);
+    SmoothSurfaceAtPoint( surf, pos, kernel);
   };
 } smoother;
 
@@ -158,6 +163,12 @@ int main(int argc, char ** argv){
   sphere_sizer.bind('S');
   sphere_tuner_xy.bind('D');
   sphere_tuner_z.bind('F');
+
+  const int MAX_SCALE = 9;
+  Kerneler scale[MAX_SCALE];
+  for(int i = 0; i < MAX_SCALE; i++){
+    scale[i].Init(4+i); scale[i].bind('1'+i);
+  };
 
   GetScene()->run( & scene );
 

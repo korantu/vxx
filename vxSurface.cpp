@@ -676,9 +676,9 @@ void UndoPushPoint(Surface & surf){
 };
 
 //Push or pull a surface to go through a point.
-void PushPoint(Surface & surf, V3f point, bool push){
+void PushPoint(Surface & surf, V3f point, bool push, int radius){
   action_t to_undo;
-  float radius = 6; //modification radius
+  //  float radius = 6; //modification radius
   for(int i = 0; i < surf.v.size(); i++){
     float proportion = SmoothBell ( DistanceSphere ( point, surf.v[i] ) / radius );
     if ( proportion > 0.01f ) {
@@ -739,13 +739,13 @@ void SmoothAdvanced(Surface & surf, Connectivity & net, VerticeSet & where){
 };
 
 
-void SmoothSurfaceAtPoint(Surface * surf, V3f point){
+void SmoothSurfaceAtPoint(Surface * surf, V3f point, int radius){
   VerticeSet new_border;
   Connectivity net; 
   Generate(net, *surf);
 
   new_border.insert(NearestPointIndex(surf, point));
-  Propagate(net, new_border, 6);
+  Propagate(net, new_border, radius);
 
   SmoothAdvanced(*surf, net, new_border);
 };

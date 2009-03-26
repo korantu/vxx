@@ -128,11 +128,11 @@ void Generate(Connectivity &, Surface & surf);
 
 void SortSurface(Surface *, V3f direction);
 
-void PushPoint(Surface & surf, V3f point, bool push);
+void PushPoint(Surface & surf, V3f point, bool push, int radius);
 void UndoPushPoint(Surface & surf);
 
 void SmoothAdvanced(Surface & surf, Connectivity & net, VerticeSet & where);
-void SmoothSurfaceAtPoint(Surface * surf, V3f point);
+void SmoothSurfaceAtPoint(Surface * surf, V3f point, int radius);
 
 
 #endif // __vxSurface_h__
