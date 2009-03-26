@@ -8,31 +8,100 @@
 #include "vxMotion.h"
 #include "vxRay.h"
 #include "vxProjection.h"
-#include "vxPlatform.h"
 
 bool show_surface = true;
 V3f center(0,0,0); //Where the center of the crrossecting object is located.
 float radius = 30; //Its radius.
 float depth_correction = 0.8f; //How deep it is; 1 - on the surface, 0 - in the center.
 
-std::string contents;
+int kernel = 0;
+
 Surface surf; 
 FastVolume vol;
 Textured tex;
 
-void LoadPatient(std::string filename);
+/*
+  TODO: Implement file navigation in a separate module:
+  0) Derive 
+  1) Parse argv/argc
+  2) Provide Actions /next/prev/save
+ */
+std::vector<std::string> patients;
+bool hemisphere = true;
+int cur_patient = 0;
+std::string content;
+void LoadPatient(std::string filename, bool hemisphere);
+void SavePatient(std::string filename, bool hemisphere);
+void LoadSavePatient(bool load){
+    std::string editable = patients.size() > 0 ? patients[cur_patient % patients.size()] : "" ;
+    if(load){
+      clear(surf);
+      LoadPatient(editable, hemisphere); 
+    }else{
+      SavePatient(editable, hemisphere); 
+    };
+};
 
 struct : Action {
   void Start(){ show_surface = !show_surface; };
 } surface_switcher;
 
 
-struct : Action {
+struct PatientIncreaser : Action {
+  int inc;
+  PatientIncreaser(bool _inc): inc(_inc){};
   void Start(){
-    std::string editable = putFile();
-    if(editable.size() == 0)return; //nothing given.
-    LoadPatient(editable); };
-} patient_loader;
+    cur_patient += inc?1:-1;
+    LoadSavePatient(true);
+  };
+};
+
+struct HemisphereChanger : Action {
+  bool is_left;
+  HemisphereChanger(bool _is_left):is_left(_is_left){};
+
+  void Start(){
+    if(hemisphere != is_left){
+      printf("Changing to %s\n", hemisphere?"left":"right");
+      hemisphere = is_left;
+      LoadSavePatient(true);
+    };
+  };
+};
+
+struct SavingAction: Action {
+  void Start(){
+    printf("Saving...\n");
+    LoadSavePatient(false);
+    };
+} saver;
+
+void LoadPatient(std::string patient, bool left){
+  //TODO - remove if done in vxDrawSphere_UT.h
+  MgzLoader mri(vol);
+  mri.Load(patient+"/mri/t1.mgz");
+
+  std::string pial_name = patient + (left ? "/surf/lh.pial":"/surf/rh.pial"); 
+
+  printf("Loading %s\n", pial_name.c_str());
+
+  content = ReadFile ( pial_name + ".vxx" ); //always try to load our version first.
+  if(!content.size())
+    content = ReadFile ( pial_name ); //Failing that, use original (but save as ours later)
+    
+  read_surface_binary_from_string(surf, content);
+
+  tex.texturing_fastvolume = &vol; 
+
+  AnalyzeSurface(surf, vol);
+};
+
+void SavePatient(std::string patient, bool left){
+  std::string pial_name = patient + (left?"/surf/lh.pial.vxx":"/surf/rh.pial.vxx"); 
+  write_surface_binary_template(&surf, pial_name, content);
+  
+};
+
 
 struct : Action {
   
@@ -132,30 +201,15 @@ struct UnPushingAction: Action {
   }
 } unpusher;
 
-
-struct SavingAction: Action {
-  void Start(){
-    printf("Saving...\n");
-    write_surface_binary_template(&surf, "data/lh_test.pial", contents);
-    };
-} saver;
-
-void LoadPatient(std::string patient){
-  //TODO - remove if done in vxDrawSphere_UT.h
-  MgzLoader mri(vol);
-  mri.Load(patient+"/data/t1.mgz");
-
-  contents = ReadFile(patient+"/data/lh.pial");
-  read_surface_binary_from_string(surf, contents);
-
-  tex.texturing_fastvolume = &vol; 
-
-  AnalyzeSurface(surf, vol);
-};
-
 int main(int argc, char ** argv){
 
-  LoadPatient(".");
+  if(argc == 1)patients.push_back(std::string("")); //assume current directory.
+  for(int i = 1; i < argc; i++){
+    patients.push_back(std::string(argv[i]));
+    printf("Preparing %s for processing.\n", argv[i]);
+  };
+
+  LoadSavePatient(true);
 
   struct TexturedSphere: public Action {
 
@@ -170,19 +224,23 @@ int main(int argc, char ** argv){
   
   surface_switcher.bind('T');
 
-  unpusher.bind(GLFW_KEY_F1);
-  PushingAction pusher(true); pusher.bind(GLFW_KEY_F2);
-  PushingAction puller(false); puller.bind(GLFW_KEY_F3);
-  smoother.bind(GLFW_KEY_F4);
+  unpusher.bind('Q');
+  PushingAction pusher(true); pusher.bind('W');
+  PushingAction puller(false); puller.bind('E');
+  smoother.bind('R');
 
 
-  sphere_placer.bind('R');
-  sphere_sizer.bind('E');
-  sphere_tuner_xy.bind('W');
-  sphere_tuner_z.bind('Q');
+  sphere_placer.bind('A');
+  sphere_sizer.bind('S');
+  sphere_tuner_xy.bind('D');
+  sphere_tuner_z.bind('F');
 
-  patient_loader.bind('P');
-  saver.bind('S');
+
+  saver.bind(GLFW_KEY_ENTER);
+  PatientIncreaser up(true); up.bind(GLFW_KEY_UP);
+  PatientIncreaser down(false); down.bind(GLFW_KEY_DOWN);
+  HemisphereChanger left(true); left.bind(GLFW_KEY_LEFT);
+  HemisphereChanger right(false); right.bind(GLFW_KEY_RIGHT);
 
   GetScene()->run( & scene );
 
