@@ -2,9 +2,9 @@
 
 #assemble flags:
 
-INCLUDES := -I$(ATB_INCLUDE) -I$(GLFW_INCLUDE) -I$(GTEST_INCLUDE)
-CXXFLAGS := $(CXXFLAGS) -Wall -g -O3 $(INCLUDES)
-LINKFLAGS := $(ATB_STATIC) $(GLFW_STATIC) $(GTEST_STATIC) $(LINKFLAGS) 
+INCLUDES := -I$(ATB_INCLUDE) -I$(GLFW_INCLUDE) -I$(GTEST_INCLUDE) -I$(FTGL_INCLUDE)
+CXXFLAGS := $(CXXFLAGS) -Wall -g -O3 $(INCLUDES) `freetype-config --cflags`
+LINKFLAGS := $(ATB_STATIC) $(GLFW_STATIC) $(GTEST_STATIC) $(FTGL_STATIC) $(LINKFLAGS) `freetype-config --libs` 
 
 
 #Rules
@@ -44,6 +44,7 @@ vxSurface.t: vxSurface_UT.o vxSurface.o vxScene.a vxFastVolume.a
 vxOpenGlTools.t: vxOpenGlTools_UT.o vxScene.a 
 vxTextured.t: vxDrawSurface.o vxTextured_UT.o vxTextured.o vxLoader.o vxScene.a
 vxTest.t: vxTest_UT.o
+vxFontFtgl.t: vxFontFtgl_UT.o vxFontFtgl.o vxBinaryBlobs.o vxScene.a
 vxx.t: main.o vxDrawSurface.o vxTextured.o vxLoader.o vxPatientsNavigation.o vxScene.a
 
 clean:

@@ -10,6 +10,9 @@ GLFW_INCLUDE:= /usr/include
 GTEST_STATIC:=/home/kdl/projects/gtest/gtest/lib/.libs/libgtest_main.a /home/kdl/projects/gtest/gtest/lib/.libs/libgtest.a 
 GTEST_INCLUDE:=/home/kdl/projects/gtest/gtest/include
 
+#FTGL
+FTGL_STATIC:=/home/kdl/lib/libftgl.a
+FTGL_INCLUDE:=/home/kdl/include
 
 LINKFLAGS := -lGL -lGLU -lXrandr -lm -lz
 CXXFLAGS := -DLINUX
