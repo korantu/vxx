@@ -21,6 +21,13 @@
 void DrawText(std::string text);
 void DrawLineAt(std::string text, V3f pos, float height);
 
+//Console configuration.
+struct Console: Action{
+  virtual Console * AddLine(std::string) = 0;
+};
+//Console constructor.
+Console * NewConsole(V3f pos, float height, int lines);
+
 #endif // __vxFontFtgl_h__
 
 //End of vxFontFtgl.h

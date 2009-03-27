@@ -11,6 +11,7 @@
 */
 
 #include <FTGL/ftgl.h>
+#include <vector>
 
 #include "vxFontFtgl.h"
 #include "vxOpenGlTools.h"
@@ -32,5 +33,46 @@ void DrawLineAt(std::string text, V3f pos, float height){
   DrawText(text);
   glPopMatrix();
 };
+
+//Console
+struct ConsoleImplementation: Console {
+  bool enable;
+  V3f pos;
+  float height;
+  int max_lines;
+  std::vector<std::string> lines;
+  
+
+  Console * AddLine(std::string a_line){
+    lines.push_back(a_line);
+    if(lines.size() > max_lines)lines.erase(lines.begin());
+    return this;
+  };
+
+  //Toggle visibility
+  void Start(){
+    enable = !enable;
+  };
+
+  void Draw(){
+    if(!enable)return;
+    for(int i = 0; i < lines.size(); i++){
+      V3f offset(0, -height * 1.2*i, 0);
+      DrawLineAt(lines[i], pos+offset, height);
+    };
+  };
+
+  ConsoleImplementation(V3f _pos, float _height, int _lines): pos(_pos), 
+							      height(_height), 
+							      max_lines(_lines), 
+							      enable(true){};
+
+}; //ConsoleImplementation
+
+Console * NewConsole(V3f pos, float height, int lines){
+  return new ConsoleImplementation( pos, height, lines);
+};
+
+
 
 // End of vxFontFtgl.cpp

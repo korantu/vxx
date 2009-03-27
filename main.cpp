@@ -139,6 +139,8 @@ struct MainNavigation: kdl_pnv::PatientsNavigation{
   };
 };
 
+
+
 int main(int argc, char ** argv){
 
   MainNavigation nav;
@@ -146,13 +148,21 @@ int main(int argc, char ** argv){
 
   struct MainScene: public Action {
 
+    Console * help_message;
+
     void Draw(){
       DrawSphereFunction( center, radius, 30, &tex);
       glColor4f(0.5f,0.5f,0.5f,0.5f);
       //SortSurface(&surf, GetProjection()->Z());
       DrawLineAt(patient_name, V3f(-100,-112,10), 10);
       if(show_surface)DrawSurface(surf);
+      help_message->Draw();
     };
+    MainScene(){
+      help_message = NewConsole(V3f(100, 70, 10), 2.0, 40);
+    };
+
+    ~MainScene() {delete help_message;};
 
   } scene; 
   
@@ -174,6 +184,38 @@ int main(int argc, char ** argv){
   for(int i = 0; i < MAX_SCALE; i++){
     scale[i].Init(4+i); scale[i].bind('1'+i);
   };
+
+  scene.help_message->bind(GLFW_KEY_F1);
+
+  scene.help_message->Start(); //Toggling it off. (bad semantics)
+
+  scene.help_message->
+    AddLine("       F1 : Toggle legend")->
+    AddLine("")->
+    AddLine("Looking:")->
+    AddLine("    Shift : Zoom")->
+    AddLine("  Control : Rotate")->
+    AddLine("      Tab : Reset view")->
+    AddLine("")->
+    AddLine("Sphere:")->
+    AddLine("      'A' : Move by pointing")->
+    AddLine("      'S' : Change - ")->
+    AddLine("         Left/Right : Size")->
+    AddLine("            Up-Down : Distance from center")->
+    AddLine("      'D' : Move in X-Y plane")->
+    AddLine("      'F' : Move along Z")->
+    AddLine("")->
+    AddLine("Tools:")->
+    AddLine("      'Q' : Undo")->
+    AddLine("      'W' : Push down")->
+    AddLine("      'E' : Pull up")->
+    AddLine("      'R' : Smooth")->
+    AddLine("   '1'-'9': Change tool size")->
+    AddLine("")->
+    AddLine("Patients:")->
+    AddLine("  Up/Down key    : Next/previous")->
+    AddLine("  Left/Right key : Left/right hemisphere")->
+    AddLine("           Enter : Save modifications");
 
   GetScene()->run( & scene );
 
