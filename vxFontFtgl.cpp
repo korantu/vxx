@@ -55,7 +55,7 @@ struct ConsoleImplementation: Console {
   };
 
   void Draw(){
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.0, 0.0, 0.0);
     if(!enable)return;
     for(int i = 0; i < lines.size(); i++){
       V3f offset(0, -height * 1.2*i, 0);
