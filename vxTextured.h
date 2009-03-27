@@ -32,7 +32,7 @@ class Textured: public Validatable {
 
   Range current_range;
 
-  //bad decision
+  //bad decision, but being used. 
   bool force_update;
 
   //export to common Texture

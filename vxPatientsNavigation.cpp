@@ -97,7 +97,7 @@ void LoadPatient(std::string patient, bool left){
   read_surface_binary_from_string(*surf, content);
 
   tex->texturing_fastvolume = vol; 
-
+  tex->force_update  = true; //Force texture to be updated.
   AnalyzeSurface(*surf, *vol);
 
   __the_patients_navigation__->Update(patient);
