@@ -7,6 +7,7 @@
 #include "vxSurface.h"
 #include "vxMotion.h"
 #include "vxRay.h"
+#include "vxFontFtgl.h"
 #include "vxProjection.h"
 #include "vxPatientsNavigation.h"
 
@@ -20,6 +21,8 @@ int kernel = 6;
 Surface surf; 
 FastVolume vol;
 Textured tex;
+
+std::string patient_name = "None loaded.";
 
 struct Kerneler : Action {
   int val;
@@ -131,6 +134,7 @@ struct UnPushingAction: Action {
 
 struct MainNavigation: kdl_pnv::PatientsNavigation{
   void Update(std::string patient){
+    patient_name = patient;
     printf("Loaded %s...\n", patient.c_str());
   };
 };
@@ -146,6 +150,7 @@ int main(int argc, char ** argv){
       DrawSphereFunction( center, radius, 30, &tex);
       glColor4f(0.5f,0.5f,0.5f,0.5f);
       //SortSurface(&surf, GetProjection()->Z());
+      DrawLineAt(patient_name, V3f(-100,-112,10), 10);
       if(show_surface)DrawSurface(surf);
     };
 

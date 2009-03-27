@@ -17,18 +17,20 @@
 #include "vxFileGzipIo.h"
 #include "vxBinaryBlobs.h"
 
-FTGLTextureFont * TheFont = NULL;
-
-void InitFont(){
-  TheFont = new FTGLTextureFont(_home_kdl_tmp_anonymous_ttf, _home_kdl_tmp_anonymous_ttf_len);
-};
-
+FTGLTextureFont TheStaticFont(_home_kdl_tmp_anonymous_ttf, _home_kdl_tmp_anonymous_ttf_len);
 
 void DrawText(std::string text){
-  if(!TheFont)InitFont();
-  if(TheFont->Error())return;
-  TheFont->FaceSize(72);
-  TheFont->Render(text.c_str());
+  if(TheStaticFont.Error())return;
+  TheStaticFont.FaceSize(72);
+  TheStaticFont.Render(text.c_str());
+};
+
+void DrawLineAt(std::string text, V3f pos, float height){
+  glPushMatrix();
+  glTranslatef(pos);
+  glScalef( height / 72.0f, height / 72.0f, height / 72.0f);
+  DrawText(text);
+  glPopMatrix();
 };
 
 // End of vxFontFtgl.cpp

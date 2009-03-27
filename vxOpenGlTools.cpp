@@ -37,6 +37,15 @@ const V3f & SetColor(const V3f & v){
   glColor3f(v.x, v.y, v.z); return v;
 };
 
+const V3f & glTranslatef(const V3f & v){
+  glTranslatef(v.x, v.y, v.z); return v;
+};
+
+const V3f & glScalef(const V3f & v){
+  glScalef(v.x, v.y, v.z); return v;
+};
+
+
 void TransparencyStart(){
     glEnable(GL_BLEND);
     glDisable(GL_LIGHTING);

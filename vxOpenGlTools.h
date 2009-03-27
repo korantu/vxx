@@ -25,6 +25,8 @@ const V3f & glVertex3f(const V3f &);
 const V3f & glNormal3f(const V3f &);
 const V3f & glColor3f(const V3f &);
 const V3f & glTexCoord3f(const V3f &);
+const V3f & glTranslatef(const V3f &);
+const V3f & glScalef(const V3f &);
 const V3f & SetColor(const V3f &);
 
 void TransparencyStart();
