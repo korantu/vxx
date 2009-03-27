@@ -187,7 +187,7 @@ int main(int argc, char ** argv){
 
   scene.help_message->bind(GLFW_KEY_F1);
 
-  scene.help_message->Start(); //Toggling it off. (bad semantics)
+  //  scene.help_message->Start(); //Toggling it off. (bad semantics)
 
   scene.help_message->
     AddLine("       F1 : Toggle legend")->

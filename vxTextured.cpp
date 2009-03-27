@@ -143,9 +143,18 @@ bool UpdateTextured(Textured & t, Range & r){
 		   (int)cur.z%255);
 
 	  //Color conversion.
+	  /*	  
 	  int r = res * 3; r=(r<0)?0:(r>255?255:r);
 	  int g = (res - 80) * 3; g=(g<0)?0:(g>255?255:g);
 	  int b = (res - 160) * 3; b=(b<0)?0:(b>255?255:b);
+	  */
+
+	  float f_res = res;
+	  f_res *= f_res; f_res /= 60.0;
+
+	  int r = f_res;
+	  int g = f_res;
+	  int b = f_res;
 
 	  ((BYTE)t.data)[Offset(x,y,z)] = r;
 	  ((BYTE)t.data)[Offset(x,y,z)+1] = g;
