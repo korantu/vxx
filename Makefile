@@ -45,10 +45,11 @@ vxOpenGlTools.t: vxOpenGlTools_UT.o vxScene.a
 vxTextured.t: vxDrawSurface.o vxTextured_UT.o vxTextured.o vxLoader.o vxScene.a
 vxTest.t: vxTest_UT.o
 vxFontFtgl.t:  vxFontFtgl.o vxFontFtgl_UT.o vxScene.a
+vxSurfaceSlicer.t:  vxSurfaceSlicer.o vxSurfaceSlicer_UT.o  vxScene.a 
 vxx.t: main.o vxDrawSurface.o vxTextured.o vxLoader.o vxPatientsNavigation.o vxScene.a
 
 clean:
-	rm *.o 
+	rm *.o *.a
 
 .PHONY: clean tags deps git
 

@@ -24,10 +24,16 @@ TEST(MAIN, BasicOperators){
   V3f x(1.0f, 1.0f, 3.3f);
   V3f y(1.0f, 2.0f, 3.0f);
   
+  V3i iv(23,32,44);
+
   V3f v(v_array);
 
   V3f b(a);
   V3f d; d = a;
+
+  EXPECT_EQ(iv[0], 23);
+  EXPECT_EQ(iv[1], 32);
+  EXPECT_EQ(iv[2], 44);
 
   EXPECT_FLOAT_EQ(a[0], 1.0f);
   EXPECT_FLOAT_EQ(a[1], 2.0f);
