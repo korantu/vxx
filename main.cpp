@@ -10,6 +10,7 @@
 #include "vxFontFtgl.h"
 #include "vxProjection.h"
 #include "vxPatientsNavigation.h"
+#include "vxSurfaceSlicer.h"
 
 bool show_surface = true;
 V3f center(0,0,0); //Where the center of the crrossecting object is located.
@@ -21,6 +22,12 @@ int kernel = 6;
 Surface surf; 
 FastVolume vol;
 Textured tex;
+BorderLine bdr;
+
+void UpdateBorder(){
+  bdr.clear();
+  GetBorderLine(&surf, center, radius, &bdr);
+};
 
 std::string patient_name = "None loaded.";
 
@@ -41,6 +48,7 @@ struct : Action {
     if(isct.hit){
       center = GetMotion()->sight.Travel(isct.distance);
       center *= depth_correction;
+      UpdateBorder();
     };
     
   };
@@ -50,6 +58,7 @@ struct : Action {
 struct : Action {
   void Do(){
     center += GetProjection()->Z() * ((float)GetMotion()->dy / 4.0); 
+    UpdateBorder();
   };
 } sphere_tuner_z;
 
@@ -82,6 +91,7 @@ struct : Action {
     float radius_new = radius_old * (1.0f - radius_factor);
     if(center_new.length() > 50 && center_new.length() < 150) center = center_new;
     if(radius_new > 10 && radius_new < 30) radius = radius_new;
+    UpdateBorder();
   };
 
   void End(){
@@ -101,6 +111,7 @@ struct PickingAction: Action {
       FixNormals(surf);
       Modify(&surf, pos); //Call for the modification.
       AnalyzeSurface(surf, vol);
+      UpdateBorder();
     };
   };
 };
@@ -129,6 +140,7 @@ struct UnPushingAction: Action {
       UndoPushPoint(surf);
       FixNormals(surf);
       AnalyzeSurface(surf, vol);
+      UpdateBorder();
   }
 } unpusher;
 
@@ -155,7 +167,11 @@ int main(int argc, char ** argv){
       glColor4f(0.5f,0.5f,0.5f,0.5f);
       //SortSurface(&surf, GetProjection()->Z());
       DrawLineAt(patient_name, V3f(-100,-112,10), 10);
-      if(show_surface)DrawSurface(surf);
+      if(show_surface){
+	DrawSurface(surf);
+      }else{
+	DrawBorder(&bdr);
+      };
       help_message->Draw();
     };
     MainScene(){
