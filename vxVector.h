@@ -27,7 +27,7 @@
 
       V3(){};
       V3(T _x, T _y, T _z):x(_x),y(_y),z(_z){};
-      V3(const T * in):x(in[0]),y(in[1]),z(in[2]){};
+      //DANGER   V3(const T * in):x(in[0]),y(in[1]),z(in[2]){};
       V3(const V3 & v):x(v.x),y(v.y),z(v.z){};
       V3 & operator=(const V3 & v){ x = v.x; y = v.y; z = v.z; return *this;};
       V3 & set(T _x, T _y, T _z){ x = _x; y = _y; z = _z; return *this;};
@@ -58,8 +58,8 @@
       V3 & operator*=(int m){ x*=(T)m; y*=(T)m, z*=(T)m; return *this;};
       V3 & operator/=(int m){ x/=(T)m; y/=(T)m, z/=(T)m; return *this;};
 
-      T length2(){ return (x*x+y*y+z*z);};
-      float length(){ return sqrtf((float)length2());};
+      T length2() const { return (x*x+y*y+z*z);};
+      float length() const { return sqrtf((float)length2());};
   
       T distance2(const V3 & v) const {return (v.x-x)*(v.x-x)+(v.y-y)*(v.y-y)+(v.z-z)*(v.z-z);};
       float distance(const V3 & v) const {return sqrtf((float)distance2());};
