@@ -12,6 +12,7 @@
 
 #define USE_FTGL 1
 
+
 #if USE_FTGL
 #include <FTGL/ftgl.h>
 #endif
@@ -24,7 +25,8 @@
 #include "vxBinaryBlobs.h"
 
 #if USE_FTGL
-FTGLTextureFont TheStaticFont(_home_kdl_tmp_anonymous_ttf, _home_kdl_tmp_anonymous_ttf_len);
+
+FTGLPolygonFont TheStaticFont(_home_kdl_tmp_anonymous_ttf, _home_kdl_tmp_anonymous_ttf_len);
 
 void DrawText(std::string text){
   if(TheStaticFont.Error())return;
