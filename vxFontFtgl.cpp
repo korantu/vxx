@@ -10,7 +10,12 @@
 *  
 */
 
+#define USE_FTGL 1
+
+#if USE_FTGL
 #include <FTGL/ftgl.h>
+#endif
+
 #include <vector>
 
 #include "vxFontFtgl.h"
@@ -18,6 +23,7 @@
 #include "vxFileGzipIo.h"
 #include "vxBinaryBlobs.h"
 
+#if USE_FTGL
 FTGLTextureFont TheStaticFont(_home_kdl_tmp_anonymous_ttf, _home_kdl_tmp_anonymous_ttf_len);
 
 void DrawText(std::string text){
@@ -74,6 +80,24 @@ Console * NewConsole(V3f pos, float height, int lines){
   return new ConsoleImplementation( pos, height, lines);
 };
 
+#else //Do not have FTGL.
 
+void DrawText(std::string text){};
+void DrawLineAt(std::string text, V3f pos, float height){};
+
+//Console configuration.
+struct DummyConsole: Console{
+  virtual Console * AddLine(std::string){
+    return this;
+  };
+};
+
+//Console constructor.
+Console * NewConsole(V3f pos, float height, int lines){
+  return new DummyConsole();
+};
+
+
+#endif //USE_FTGL
 
 // End of vxFontFtgl.cpp

@@ -14,7 +14,7 @@ GTEST_INCLUDE:=/home/kdl/projects/gtest/gtest/include
 FTGL_STATIC:=/home/kdl/lib/libftgl.a
 FTGL_INCLUDE:=/home/kdl/include
 
-LINKFLAGS := -lGL -lGLU -lXrandr -lm -lz
+LINKFLAGS := -lGL -lGLU -lXrandr -lm -lz `freetype-config --libs`
 CXXFLAGS := -DLINUX
 
 ETAGSFLAGS := --declarations
