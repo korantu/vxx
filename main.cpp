@@ -67,6 +67,7 @@ struct : Action {
   void Do(){
     center += GetProjection()->X() * ((float)GetMotion()->dx / 2.0); 
     center += GetProjection()->Y() * ((float)GetMotion()->dy / -2.0); 
+    UpdateBorder();
   };
 } sphere_tuner_xy;
 
@@ -147,6 +148,7 @@ struct UnPushingAction: Action {
 struct MainNavigation: kdl_pnv::PatientsNavigation{
   void Update(std::string patient){
     patient_name = patient;
+    void UpdateBorder();
     printf("Loaded %s...\n", patient.c_str());
   };
 };

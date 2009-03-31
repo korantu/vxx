@@ -44,6 +44,7 @@ vxSurface.t: vxSurface_UT.o vxSurface.o vxScene.a vxFastVolume.a
 vxOpenGlTools.t: vxOpenGlTools_UT.o vxScene.a 
 vxTextured.t: vxDrawSurface.o vxTextured_UT.o vxTextured.o vxLoader.o vxScene.a
 vxTest.t: vxTest_UT.o
+vxFollower.t:  vxFollower.o vxFollower_UT.o
 vxFontFtgl.t:  vxFontFtgl.o vxFontFtgl_UT.o vxScene.a
 vxSurfaceSlicer.t:  vxSurfaceSlicer.o vxSurfaceSlicer_UT.o  vxScene.a 
 vxx.t: main.o vxDrawSurface.o vxTextured.o vxLoader.o vxPatientsNavigation.o vxScene.a
