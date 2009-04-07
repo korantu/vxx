@@ -145,7 +145,7 @@ struct UnPushingAction: Action {
 struct MainNavigation: kdl_pnv::PatientsNavigation{
   void Update(std::string patient){
     patient_name = patient;
-    void UpdateBorder();
+    UpdateBorder();
     printf("Loaded %s...\n", patient.c_str());
   };
 };
@@ -179,11 +179,10 @@ int main(int argc, char ** argv){
     MainScene(){
       help_message = NewConsole(V3f(100, 70, 10), 2.0, 40);
     };
-
     ~MainScene() {delete help_message;};
 
   } scene; 
-  
+
   surface_switcher.bind('T');
 
   unpusher.bind('Q');
@@ -234,6 +233,9 @@ int main(int argc, char ** argv){
     AddLine("  Up/Down key    : Next/previous")->
     AddLine("  Left/Right key : Left/right hemisphere")->
     AddLine("           Enter : Save modifications");
+
+
+  UpdateBorder();
 
   GetScene()->run( & scene );
 

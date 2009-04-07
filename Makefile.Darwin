@@ -10,6 +10,10 @@ GLFW_INCLUDE:= /Users/desi/kdl/glfw/glfw/include
 GTEST_STATIC:= /Users/desi/kdl/gtest/lib/.libs/libgtest_main.a  /Users/desi/kdl/gtest/lib/.libs/libgtest.a
 GTEST_INCLUDE:= /Users/desi/kdl/gtest/include
 
+#FTGL
+FTGL_STATIC:=/Users/desi/kdl/lib/libftgl.a /Users/desi/kdl/lib//libfreetype.a
+FTGL_INCLUDE:=/Users/desi/kdl/include
+
 LINKFLAGS := -framework AGL -framework OpenGL -framework Carbon -lz
 CXXFLAGS := -mmacosx-version-min=10.4 -DMACOSX
 
