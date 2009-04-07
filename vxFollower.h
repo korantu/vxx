@@ -13,23 +13,24 @@
 #ifndef __vxFollower_h__
 #define __vxFollower_h__
 
+#include <stdio.h>
+
 #include "vxVector.h"
 
-/**
-  Follower has a virtual method Do(), which is executed when a value has changed.
-  Follow(int/V3f,float)// adds a reference to the object being followed.
-  
- */ 
-
-struct Follower {
-  virtual void Do() = 0;
-
-  void Follow(float *);
-  void Follow(V3f *);
-  void Follow(int *);
-
-  bool to_kick;
+struct Followable {
+  int hash;
+  Followable(){};
+  void Invalidate();
 };
+
+struct FollowingAction {
+  virtual void Do() = 0;
+};
+
+void Watch(int * in, FollowingAction *);
+void Watch(float * in, FollowingAction *);
+void Watch(V3f * in, FollowingAction *);
+void Watch(Followable * in, FollowingAction *);
 
 void KickFollowers();
 void ResetFollowers(); //As followers do not know when the values tracked become invalid

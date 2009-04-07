@@ -11,6 +11,7 @@
 #include "vxProjection.h"
 #include "vxPatientsNavigation.h"
 #include "vxSurfaceSlicer.h"
+#include "vxFollower.h"
 
 bool show_surface = true;
 V3f center(0,0,0); //Where the center of the crrossecting object is located.
@@ -48,7 +49,6 @@ struct : Action {
     if(isct.hit){
       center = GetMotion()->sight.Travel(isct.distance);
       center *= depth_correction;
-      UpdateBorder();
     };
     
   };
@@ -58,7 +58,6 @@ struct : Action {
 struct : Action {
   void Do(){
     center += GetProjection()->Z() * ((float)GetMotion()->dy / 4.0); 
-    UpdateBorder();
   };
 } sphere_tuner_z;
 
@@ -67,7 +66,6 @@ struct : Action {
   void Do(){
     center += GetProjection()->X() * ((float)GetMotion()->dx / 2.0); 
     center += GetProjection()->Y() * ((float)GetMotion()->dy / -2.0); 
-    UpdateBorder();
   };
 } sphere_tuner_xy;
 
@@ -92,7 +90,6 @@ struct : Action {
     float radius_new = radius_old * (1.0f - radius_factor);
     if(center_new.length() > 50 && center_new.length() < 150) center = center_new;
     if(radius_new > 10 && radius_new < 30) radius = radius_new;
-    UpdateBorder();
   };
 
   void End(){
@@ -112,7 +109,7 @@ struct PickingAction: Action {
       FixNormals(surf);
       Modify(&surf, pos); //Call for the modification.
       AnalyzeSurface(surf, vol);
-      UpdateBorder();
+      surf.Invalidate();
     };
   };
 };
@@ -141,7 +138,7 @@ struct UnPushingAction: Action {
       UndoPushPoint(surf);
       FixNormals(surf);
       AnalyzeSurface(surf, vol);
-      UpdateBorder();
+      surf.Invalidate();
   }
 } unpusher;
 
@@ -159,6 +156,9 @@ int main(int argc, char ** argv){
 
   MainNavigation nav;
   nav.InitNavigation(argc, argv, &surf, &vol, &tex);
+
+  struct : FollowingAction { void Do() { UpdateBorder(); }; } updater;
+  Watch(&radius, &updater); Watch(&center, &updater); Watch(&surf, &updater);
 
   struct MainScene: public Action {
 

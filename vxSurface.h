@@ -21,7 +21,7 @@
 #include "vxVector.h"
 #include "vxFileGzipIo.h"
 #include "vxFastVolume.h"
-
+#include "vxFollower.h"
 //reading a surface from a file
 
 using namespace std;
@@ -35,7 +35,7 @@ struct Kern{
 /** 
  A simple surface representation 
 */
-struct Surface{
+struct Surface: Followable {
   vector<V3f> n; ///Normals
   vector<V3f> v; ///Vectors (have to be of the same size as normals;  
   vector<V3f> c; ///colors needed for analyzing surface;

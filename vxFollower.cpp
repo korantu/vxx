@@ -11,6 +11,8 @@
 */
 
 #include <vector>
+#include <stdio.h>
+#include <string.h>
 
 #include "vxFollower.h"
 #include "vxVector.h"
@@ -19,95 +21,112 @@ using namespace std;
 
 /* Hashers */
 
-unsigned int GetHash(int in){
-  return (unsigned int) in;
+void Followable::Invalidate(){
+  hash++;
 };
 
-unsigned int GetHash(float in){
-  return * ((unsigned int *) &in );
+/**
+   Base class, allows operate on followers uniformly;
+*/
+
+struct BaseFollower {
+  virtual bool Changed() = 0;
+  virtual void Reset() = 0;
+  FollowingAction * action;  
 };
 
-unsigned int GetHash(V3f in){
-  float a = in.x+in.y*1.23+in.z*0.45; //Random multiplication 
-  unsigned int h = * ( (unsigned int *) &a ); //getting address.
-  return h;
-};
+/**
+   Basic follower is a template for a usable follower,
+   parameter is the type being followed;
 
-struct FollowRecord{
-  Follower * follow;
+   Watch() to set the focus.
+ */
 
-  int * int_ptr;
-  float * float_ptr;
-  V3f * V3f_ptr;
-
+template<class T>
+struct BasicFollower: BaseFollower {
   unsigned int hash;
+  T * data;
 
-  //Dispatcher
-  unsigned int DispatchGetHash(){
-    if(int_ptr) return GetHash(*int_ptr);
-    if(float_ptr) return GetHash(*float_ptr);
-    if(V3f_ptr) return GetHash(*V3f_ptr);
+  virtual bool Changed(){
+    printf( "hash:%d, GetHash():%d\n" , hash , GetHash(data) );
+    return hash != GetHash(data);};
+  virtual void Reset(){
+    hash = GetHash(data);
   };
 
-  bool Changed(){
-    return (hash != DispatchGetHash());
+  virtual BaseFollower * Watch(T * in){
+    data = in;
+    Reset(); hash++; //Make sure it is seen as changed.
+    return this;
   };
+};
+
+/// Hashers
+
+unsigned int GetHash(int * in){
+  unsigned int res;
+  memcpy(&res, in, sizeof(int));
+  return res;
+};
+
+unsigned int GetHash(float * in){
+  unsigned int res;
+  memcpy(&res, in, sizeof(int));
+  return res;
+};
+
+unsigned int GetHash(V3f * in){
+  float a = in->x+in->y*1.23+in->z*0.45; //Random multiplication
+  return GetHash(&a);
+};
+
+unsigned int GetHash(Followable * in){
+  return in->hash;
+};
+
+///Storage
+struct FollwerRecordList{
+  typedef vector<BaseFollower *> list_t;
+   list_t r;
 
   void Reset(){
-    (hash = DispatchGetHash());
+    for(list_t::iterator i = r.begin(); i != r.end(); i++)delete (*i);
+    r.clear();
   };
 
-  void Track(int * in){int_ptr = in; Reset();};
-  void Track(float * in){float_ptr = in; Reset();};
-  void Track(V3f * in){V3f_ptr = in; Reset();};
+  void Kick(){
+    for(list_t::iterator i = r.begin(); i != r.end(); i++){
+      if((*i)->Changed()){
+	(*i)->action->Do();
+	(*i)->Reset();
+      };
+    };  
 
-  FollowRecord(Follower * f):follow(f){
-    int_ptr = NULL;
-    float_ptr = NULL;
-    V3f_ptr = NULL;
   };
+
+  ~FollwerRecordList(){Reset();};
+} __follower_record__;
+
+///Watcher constructors
+template<class T>
+void WatchTemplate(T * in, FollowingAction * act){
+  BasicFollower<T> * res = new BasicFollower<T>();
+  res->Watch(in); res->action = act;
+  __follower_record__.r.push_back(res);
 };
 
+void Watch(int * in, FollowingAction * act){ WatchTemplate<int>(in, act); };
+void Watch(float * in, FollowingAction * act){ WatchTemplate<float>(in, act); };
+void Watch(V3f * in, FollowingAction * act){ WatchTemplate<V3f>(in, act); };
+void Watch(Followable * in, FollowingAction * act){ WatchTemplate<Followable>(in, act); };
 
-vector<FollowRecord> __follow_record__;
-
-void Follower::Follow(int * in){FollowRecord rec(this); rec.Track(in);  __follow_record__.push_back(rec);};
-void Follower::Follow(float * in){FollowRecord rec(this); rec.Track(in);  __follow_record__.push_back(rec);};
-void Follower::Follow(V3f * in){FollowRecord rec(this); rec.Track(in);  __follow_record__.push_back(rec);};
-
-struct EachRecord {
-  virtual void Do(vector<FollowRecord>::iterator) = 0;
-
-  void Iterate(){
-    for(vector<FollowRecord>::iterator i =  __follow_record__.begin();
-	i != __follow_record__.end();
-	i++)
-      Do(i);
-  };
-};
 
 void KickFollowers(){
-  struct : EachRecord {
-    void Do(vector<FollowRecord>::iterator i){ i->follow->to_kick = false; };
-  } cleaner; cleaner.Iterate();
-
-  struct : EachRecord {
-    void Do(vector<FollowRecord>::iterator i){ if(i->Changed()) i->follow->to_kick = true; };
-  } checker; checker.Iterate();
-
-  struct : EachRecord {
-    void Do(vector<FollowRecord>::iterator i){ 
-      if(i->follow->to_kick) {
-	i->follow->Do();
-	i->follow->to_kick = false;
-	i->Reset();
-      }; 
-    }; 
-  } kicker; kicker.Iterate();
+  __follower_record__.Kick();
 };
 
 void ResetFollowers(){
-  __follow_record__.clear();
+  __follower_record__.Reset();
 };
 
 // End of vxFollower.cpp
