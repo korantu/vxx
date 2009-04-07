@@ -36,5 +36,12 @@ TEST(MAIN, FollowerActions){
   KickFollowers(); 
 
   EXPECT_EQ(flw.i, 3);
+
+  KickFollowers(); 
+  KickFollowers(); 
+  KickFollowers(); 
+
+  EXPECT_EQ(flw.i, 3);
+
 };
 //End of vxFollower_UT.cpp

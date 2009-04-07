@@ -145,7 +145,7 @@ struct UnPushingAction: Action {
 struct MainNavigation: kdl_pnv::PatientsNavigation{
   void Update(std::string patient){
     patient_name = patient;
-    UpdateBorder();
+    surf.Invalidate();
     printf("Loaded %s...\n", patient.c_str());
   };
 };
@@ -172,6 +172,7 @@ int main(int argc, char ** argv){
       if(show_surface){
 	DrawSurface(surf);
       }else{
+	KickFollowers();
 	DrawBorder(&bdr);
       };
       help_message->Draw();

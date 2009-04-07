@@ -48,7 +48,6 @@ struct BasicFollower: BaseFollower {
   T * data;
 
   virtual bool Changed(){
-    printf( "hash:%d, GetHash():%d\n" , hash , GetHash(data) );
     return hash != GetHash(data);};
   virtual void Reset(){
     hash = GetHash(data);
