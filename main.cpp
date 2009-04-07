@@ -132,6 +132,13 @@ struct SmoothingAction: PickingAction {
 } smoother;
 
 
+struct RaisingAction: PickingAction {
+  virtual void Modify(Surface * surf, V3f pos){
+    RaiseSurfaceAtPoint( surf, pos, kernel);
+  };
+} raiser;
+
+
 
 struct UnPushingAction: Action {
   void Start(){
@@ -190,7 +197,7 @@ int main(int argc, char ** argv){
   PushingAction pusher(true); pusher.bind('W');
   PushingAction puller(false); puller.bind('E');
   smoother.bind('R');
-
+  raiser.bind('Y');
 
   sphere_placer.bind('A');
   sphere_sizer.bind('S');

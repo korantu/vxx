@@ -81,7 +81,6 @@ void Smooth(Surface & surf, VerticeSet where){
 };
 
 
-
 //Drawing a surface.
 /*
 TEST(MAIN, SurfaceSmoothing){
@@ -385,7 +384,18 @@ TEST(MAIN, Connectivity){
 TEST(MAIN, RealMesh){
   Surface surf;
   Connectivity net; 
+
   EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
+
+
+struct PP : Propagator {
+  int step;
+
+  PP():step(0){};
+    virtual void Step(int _step, int sample){
+      if(step < _step){step = _step;};
+  } } max_finder;
+
 
   Generate(net, surf);
 
@@ -398,15 +408,19 @@ TEST(MAIN, RealMesh){
       max_connectivity = net[i].size();
   };
   
-  EXPECT_EQ(max_connectivity, 16);
+  EXPECT_EQ(max_connectivity, 17);
 
   VerticeSet test; test.insert(3); //Let's say; start with the third point;
-  
+
+
   Propagate(net, test, 1); //Do one step; 
   EXPECT_EQ(7, test.size());
 
-  Propagate(net, test, 10000); //Do lots of steps; 
-  EXPECT_EQ(109434, test.size());
+
+  Propagate(net, test, 10000, &max_finder); //Do lots of steps; 
+  EXPECT_EQ(104927, test.size());
+
+  EXPECT_EQ(max_finder.step, 210);
 };
 
 

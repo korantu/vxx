@@ -107,7 +107,11 @@ typedef std::map<Vertice, VerticeSet> Connectivity;
 void Link(Connectivity &, Vertice a, Vertice b);
 void BiLink(Connectivity &, Vertice a, Vertice b);
 
-void Propagate(const Connectivity &, VerticeSet &, int times);
+struct Propagator {
+  virtual void Step(int step, int vertice) = 0;
+};
+
+void Propagate(const Connectivity &, VerticeSet &, int times, Propagator * p = NULL);
 
 //void Generate(Connectivity &, Surface *);
 
@@ -133,7 +137,7 @@ void UndoPushPoint(Surface & surf);
 
 void SmoothAdvanced(Surface & surf, Connectivity & net, VerticeSet & where);
 void SmoothSurfaceAtPoint(Surface * surf, V3f point, int radius);
-
+void RaiseSurfaceAtPoint(Surface * surf, V3f point, int radius);
 
 #endif // __vxSurface_h__
 

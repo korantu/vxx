@@ -577,7 +577,7 @@ void BiLink(Connectivity & net, Vertice a, Vertice b){
   Link(net, b, a);
 };
 
-void Propagate(const Connectivity & net, VerticeSet & current, int times){
+void Propagate(const Connectivity & net, VerticeSet & current, int times, Propagator * p){
   VerticeSet border(current);
   VerticeSet new_border;
   //each step
@@ -589,6 +589,7 @@ void Propagate(const Connectivity & net, VerticeSet & current, int times){
 	  cur_b != net.find(*cur_a)->second.end(); cur_b++){
 	if(current.find(*cur_b) == current.end()){
 	  new_border.insert(*cur_b);
+	  if (p) p->Step(step, (*cur_b));
 	  current.insert(*cur_b);
 	};//current.find()
       };// neighbours 
@@ -748,6 +749,42 @@ void SmoothSurfaceAtPoint(Surface * surf, V3f point, int radius){
   Propagate(net, new_border, radius);
 
   SmoothAdvanced(*surf, net, new_border);
+};
+
+
+void RaiseSurfaceAtPoint(Surface * surf, V3f point, int radius){
+  VerticeSet new_border;
+  VerticeSet raising_border;
+  Connectivity net; 
+  Generate(net, *surf);
+
+  struct Raiser : Propagator {
+    Surface * surf;
+    int radius;
+    V3f direction;
+    Raiser(Surface * _surf, int _radius):surf(_surf),radius(_radius){};
+
+    virtual void Step(int n, int vertice){
+      surf->v[vertice] += direction*SmoothBell(0.2+(float)(n)/((float)radius));
+    };
+
+  } raiser(surf, radius);
+
+  int nearest_point_index = NearestPointIndex(surf, point);
+
+  new_border.insert(nearest_point_index);
+  Propagate(net, new_border, radius);
+
+  //SmoothAdvanced(*surf, net, new_border);
+  //SmoothAdvanced(*surf, net, new_border);
+  //FixNormals(*surf);
+
+  raising_border.insert(nearest_point_index);
+  raiser.direction = point - surf->v[nearest_point_index];
+  raiser.Step(0, nearest_point_index);
+  Propagate(net, raising_border, radius, &raiser);
+  
+  //FixNormals(*surf);
 };
 
 
