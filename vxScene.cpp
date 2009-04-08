@@ -114,11 +114,34 @@ struct RotationAction: Action {
 Scene * Scene::run(Action * to_draw){
     
     glfwInit();
-    if( !glfwOpenWindow( 500, 500, 0,0,0,0, 16,0, 
-			 GLFW_WINDOW ) )
+
+    //Finding resolution
+
+
+    const int maxmodes=100;
+    GLFWvidmode modes[maxmodes];
+
+    int pixels = 0;
+    int better_mode = 0;
+    int total_modes = glfwGetVideoModes(modes, maxmodes);
+
+    for(int i = 0; i < total_modes; i++){
+      int cur_pixels = modes[i].Width*modes[i].Height;
+      if(cur_pixels > pixels){
+	better_mode = i;
+	pixels = cur_pixels;
+      };
+    };
+
+    //Setting the mode.
+    if( !glfwOpenWindow( modes[better_mode].Width,
+			 modes[better_mode].Height,
+			 0,0,0,0, 16,0,
+			 GLFW_FULLSCREEN ) )
       {
         glfwTerminate();
       }
+    glfwEnable(GLFW_MOUSE_CURSOR);
     glfwSetWindowTitle( "3D" );
    
     glfwEnable( GLFW_STICKY_KEYS );
