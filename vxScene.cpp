@@ -159,7 +159,6 @@ Scene * Scene::run(Action * to_draw){
 
        	GetProjection()->Draw();
 
-	glScalef(1.0f/64.0, 1.0f/64.0f, 1.0f/64.0f);
 	glDisable (GL_BLEND); 
 	glDisable(GL_LIGHTING);
 	glClear(GL_COLOR_BUFFER_BIT | 

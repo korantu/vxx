@@ -69,6 +69,12 @@ struct : Action {
   };
 } sphere_tuner_xy;
 
+struct : Action {
+  void Start(){
+    GetProjection()->Focus(center);
+  };
+} focuser;
+
 
 //Ajust the sphere.
 struct : Action {
@@ -203,6 +209,8 @@ int main(int argc, char ** argv){
   sphere_sizer.bind('S');
   sphere_tuner_xy.bind('D');
   sphere_tuner_z.bind('F');
+
+  focuser.bind('C');
 
   const int MAX_SCALE = 9;
   Kerneler scale[MAX_SCALE];

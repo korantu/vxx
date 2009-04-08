@@ -29,8 +29,13 @@ void Projection::CopyMatrix(){
   matrix[8]=ez.x; matrix[9]=ez.y; matrix[10]=ez.z;
 };
 
+void Projection::Focus(V3f c){
+  focus = c;
+};
+
 void Projection::Reset( int N){
   zoom = 1; zoom_x = 0; zoom_y = 0;
+  focus = V3f(0.0f,0.0f,0.0f);
   V3f basis[] = {V3f(1,0,0), V3f(0,1,0), V3f(0,0,1)};
   ex=basis[N%3]; ey=basis[(N+1)%3]; ez=basis[(N+2)%3]; 
   double _matrix[] = {1.0, 0.0, 0.0, 0.0, //Copy last row and column.
@@ -89,6 +94,8 @@ void Projection::Draw(){
 
   CopyMatrix();
   glLoadMatrixd(matrix);
+  glTranslatef(-focus.x/64.0, -focus.y/64.0, -focus.z/64.0);
+  glScalef(1.0f/64.0, 1.0f/64.0f, 1.0f/64.0f);
 };
 
 Projection the_projection;

@@ -20,6 +20,7 @@ struct Projection {
   Projection(); // Resetting the thing.
 
   float zoom; //Zooming focus. Used to set up frustum.
+  V3f focus;
   int zoom_x;
   int zoom_y;
 
@@ -38,6 +39,7 @@ struct Projection {
   void Rotate( float x, float y); 
   void Zoom( int x, int y, float times);
   void Reset( int N = 0);
+  void Focus( V3f );
 
   void Draw();
 };
