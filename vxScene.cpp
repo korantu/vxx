@@ -13,6 +13,7 @@
 
 #include <map>
 #include <stdio.h>
+#include <stdlib.h> //For getenv().
 
 #include "vxOpenGlTools.h"
 #include "vxLighting.h"
@@ -111,6 +112,11 @@ struct RotationAction: Action {
   };
 } rotation_action;
 
+//check if fullscreen wanted
+bool Fullscreen(){
+  return NULL != getenv("VXX_FULLSCREEN");
+};
+
 Scene * Scene::run(Action * to_draw){
     
     glfwInit();
@@ -137,7 +143,7 @@ Scene * Scene::run(Action * to_draw){
     if( !glfwOpenWindow( modes[better_mode].Width,
 			 modes[better_mode].Height,
 			 0,0,0,0, 16,0,
-			 GLFW_FULLSCREEN ) )
+			 Fullscreen()?GLFW_FULLSCREEN:GLFW_WINDOW ) )
       {
         glfwTerminate();
       }
