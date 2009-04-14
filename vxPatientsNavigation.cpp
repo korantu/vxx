@@ -118,29 +118,29 @@ HemisphereChanger right(false);
 
 
   void kdl_pnv::PatientsNavigation::InitNavigation(int argc, char ** argv,
-					Surface * _surf, FastVolume * _vol, Textured * _tex){
-
-  __the_patients_navigation__ = this;
-
-  surf = _surf; vol = _vol; tex = _tex;
-
-  //Process arguments
-  if(argc == 1)patients.push_back(std::string("")); //assume current directory.
-  for(int i = 1; i < argc; i++){
-    patients.push_back(std::string(argv[i]));
-    printf("Preparing %s for processing.\n", argv[i]);
+						   Surface * _surf, FastVolume * _vol, Textured * _tex){
+    
+    __the_patients_navigation__ = this;
+    
+    surf = _surf; vol = _vol; tex = _tex;
+    
+    //Process arguments
+    if(argc == 1)patients.push_back(std::string("./")); //assume current directory.
+    for(int i = 1; i < argc; i++){
+      patients.push_back(std::string(argv[i]));
+      printf("Preparing %s for processing.\n", argv[i]);
+    };
+    
+    //Bind keys for navigation.
+    saver.bind(GLFW_KEY_ENTER);
+    up.bind(GLFW_KEY_UP);
+    down.bind(GLFW_KEY_DOWN);
+    left.bind(GLFW_KEY_LEFT);
+    right.bind(GLFW_KEY_RIGHT);
+    
+    LoadSavePatient(true);
+    
   };
-
-  //Bind keys for navigation.
-  saver.bind(GLFW_KEY_ENTER);
-  up.bind(GLFW_KEY_UP);
-  down.bind(GLFW_KEY_DOWN);
-  left.bind(GLFW_KEY_LEFT);
-  right.bind(GLFW_KEY_RIGHT);
-
-  LoadSavePatient(true);
-
-};
 
 };
 
