@@ -667,6 +667,20 @@ struct UndoPoint {
 typedef std::vector<UndoPoint> action_t;
 std::vector<action_t> __undo_push_point_storage__; 
 
+void RecordUndoInformation(Surface * surf, VerticeSet * to_remember){
+  if(to_remember->size() == 0) return;
+
+  action_t to_undo;
+  for(VerticeSet::iterator i = to_remember->begin(); 
+      i != to_remember->end();
+      i++){
+    UndoPoint undo = { (*i), surf->v[(*i)] };
+    to_undo.push_back( undo );
+  };
+  
+  __undo_push_point_storage__.push_back(to_undo);
+};
+
 void UndoPushPoint(Surface & surf){
   if(__undo_push_point_storage__.size() == 0)return;
   action_t to_undo =  __undo_push_point_storage__.back();
@@ -748,6 +762,8 @@ void SmoothSurfaceAtPoint(Surface * surf, V3f point, int radius){
   new_border.insert(NearestPointIndex(surf, point));
   Propagate(net, new_border, radius);
 
+  RecordUndoInformation(surf, &new_border);
+
   SmoothAdvanced(*surf, net, new_border);
 };
 
@@ -775,11 +791,15 @@ void RaiseSurfaceAtPoint(Surface * surf, V3f point, int radius){
   new_border.insert(nearest_point_index);
   Propagate(net, new_border, radius);
 
+  RecordUndoInformation(surf, &new_border);
+
   //SmoothAdvanced(*surf, net, new_border);
   //SmoothAdvanced(*surf, net, new_border);
   //FixNormals(*surf);
 
   raising_border.insert(nearest_point_index);
+  
+
   raiser.direction = point - surf->v[nearest_point_index];
   raiser.Step(0, nearest_point_index);
   Propagate(net, raising_border, radius, &raiser);
