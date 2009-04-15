@@ -14,6 +14,7 @@
 
 #include "vxTextured.h"
 #include "vxOpenGlTools.h"
+#include "GL/glext.h"
 
 //making compiler shut up; in vain.
 #define BPP 4 

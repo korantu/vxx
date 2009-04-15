@@ -14,6 +14,7 @@
 #define __vxOpenGlTools_h__
 
 #include <GL/glfw.h>
+#include <GL/glext.h>
 
 #include "vxVector.h"
 
