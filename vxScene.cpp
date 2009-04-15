@@ -114,7 +114,7 @@ struct RotationAction: Action {
 
 //check if fullscreen wanted
 bool Fullscreen(){
-  return NULL != getenv("VXX_FULLSCREEN");
+  return NULL == getenv("VXX_NO_FULLSCREEN");
 };
 
 Scene * Scene::run(Action * to_draw){
