@@ -1,4 +1,4 @@
 #!/bin/bash
 
-echo Using `uname`...
-make -f Makefile.`uname` $@
+echo Using `uname -o`...
+make -f Makefile.platform.`uname -o` $@
