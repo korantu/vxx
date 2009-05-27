@@ -369,7 +369,7 @@ float AnalyzePoint(const V3f & pnt, const V3f & n, FastVolume & volume, V3f & ou
   out.z = volume.SampleCentered(pnt.x+3*n.x, pnt.y+3*n.y, pnt.z+3*n.z);
   float m = out.min();
   out -= V3f(m, m, m);
-  out /= out.length();
+  if(out.length()>0.0001) out /= out.length();
   return 0;
 
 };

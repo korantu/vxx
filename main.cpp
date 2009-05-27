@@ -240,6 +240,7 @@ int main(int argc, char ** argv){
     AddLine("")->
     AddLine("Tools:")->
     AddLine("      'Q' : Undo")->
+    AddLine("      'Y' : Ajust the surface to go through the point")->
     AddLine("      'W' : Push down")->
     AddLine("      'E' : Pull up")->
     AddLine("      'R' : Smooth")->
