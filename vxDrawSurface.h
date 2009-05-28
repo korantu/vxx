@@ -16,7 +16,18 @@
 #include "vxSurface.h"
 #include "vxTextured.h"
 
-void DrawSurface( const Surface & surf );
+struct DrawProperties {
+  DrawProperties();
+  bool colored;
+  bool limited;
+  bool wireframe;
+
+  //Limitation params
+  V3f center;
+  float radius;
+};
+
+void DrawSurface( const Surface & surf, DrawProperties * properties = NULL );
 void DrawSurfaceLines( const Surface & surf );
 void DrawSphereFunction( const V3f & where, 
 			 float radius, 

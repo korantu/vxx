@@ -45,6 +45,10 @@ struct Surface: Followable {
   V3f offset;
   
   Surface(); 
+
+  FastVolume * target; //Target fast volume, to determine how exactly the surface has to be loaded.
+  //Set to zero in constructior.
+
 };
 
 

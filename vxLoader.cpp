@@ -284,6 +284,9 @@ void Loader::parse(raw data, FastVolume & result, bool read){
   printf("R: x(%f) y(%f) z(%f) c(%f)\n", x_r, y_r, z_r, c_r);
   printf("A: x(%f) y(%f) z(%f) c(%f)\n", x_a, y_a, z_a, c_a);
   printf("S: x(%f) y(%f) z(%f) c(%f)\n", x_s, y_s, z_s, c_s);
+  result.tr.x = V3f(x_r, x_a, x_s);
+  result.tr.y = V3f(y_r, y_a, y_s);
+  result.tr.z = V3f(z_r, z_a, z_s);
   result.tr.c_r = c_r;
   result.tr.c_a = c_a;
   result.tr.c_s = c_s;

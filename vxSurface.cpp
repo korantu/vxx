@@ -32,7 +32,7 @@ void clear(Surface & in){
 
 /* Surface constructor */
 
-Surface::Surface() : offset(V3f(0,0,0)) {};
+Surface::Surface() : offset(V3f(0,0,0)), target(NULL) {};
   
 bool WritePialHeader(Io & data, int vertices, int triangles){
   //Signature
@@ -94,7 +94,7 @@ bool write_surface_binary_template(Surface * surf, std::string name, std::string
   //Points
   for(int i = 0; i < vertices_number; i++){
     V3f out = surf->v[i];
-    out = V3f(-out.x, +out.z, +out.y); //Jumping the same hoops;
+    // out = V3f(out.x, out.y, out.z); //Jumping the same hoops;
     data.PutFloat(out.x).PutFloat(out.y).PutFloat(out.z);
   };
   //Tris
@@ -129,9 +129,13 @@ bool read_surface_binary_from_string(Surface & surf, std::string content){
     V3f in;
   //int dummy;
     data.GetFloat(&in.x).GetFloat(&in.y).GetFloat(&in.z);
-    in = V3f(-in.x, +in.z, +in.y);
-    //    in+=V3f(128, 127, 128); //arbitrary correction.
-    //  printf("%f, %f, %f\n", in.x, in.y, in.z);
+    // Original     
+    //    in = V3f(-in.x, +in.z, +in.y);
+    // Australian     
+    // in = V3f(-in.x, in.z, -in.y);
+
+    // in-=V3f(0, +2, 25); //arbitrary correction.
+      //  printf("%f, %f, %f\n", in.x, in.y, in.z);
     surf.v.push_back(in);
     seed += in;
     surf.n.push_back(V3f(0,0,0));

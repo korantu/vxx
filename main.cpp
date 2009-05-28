@@ -14,7 +14,9 @@
 #include "vxFollower.h"
 
 bool show_surface = true;
-V3f center(0,0,0); //Where the center of the crrossecting object is located.
+DrawProperties surface_type;
+
+V3f center(0,0,0); //Where the center of the crossecting object is located.
 float radius = 30; //Its radius.
 float depth_correction = 0.8f; //How deep it is; 1 - on the surface, 0 - in the center.
 
@@ -25,7 +27,9 @@ FastVolume vol;
 Textured tex;
 BorderLine bdr;
 
-void UpdateBorder(){
+void SphereMoved(){
+  surface_type.center = center;
+  surface_type.radius = radius * 1.2;
   bdr.clear();
   GetBorderLine(&surf, center, radius, &bdr);
 };
@@ -74,6 +78,7 @@ struct : Action {
     GetProjection()->Focus(center);
   };
 } focuser;
+
 
 
 //Ajust the sphere.
@@ -155,6 +160,28 @@ struct UnPushingAction: Action {
   }
 } unpusher;
 
+struct ColorSwitch: Action {
+  void Start(){
+    surface_type.colored = !surface_type.colored;
+    surf.Invalidate();
+  }
+} colorer;
+
+struct WireSwitch: Action {
+  void Start(){
+    surface_type.wireframe = !surface_type.wireframe;
+    surf.Invalidate();
+  }
+} wirerer;
+
+struct LimitSwitch: Action {
+  void Start(){
+    surface_type.limited = !surface_type.limited;
+    surf.Invalidate();
+  }
+} limiter;
+
+
 struct MainNavigation: kdl_pnv::PatientsNavigation{
   void Update(std::string patient){
     patient_name = patient;
@@ -170,7 +197,7 @@ int main(int argc, char ** argv){
   MainNavigation nav;
   nav.InitNavigation(argc, argv, &surf, &vol, &tex);
 
-  struct : FollowingAction { void Do() { UpdateBorder(); }; } updater;
+  struct : FollowingAction { void Do() { SphereMoved(); }; } updater;
   Watch(&radius, &updater); Watch(&center, &updater); Watch(&surf, &updater);
 
   struct MainScene: public Action {
@@ -178,14 +205,14 @@ int main(int argc, char ** argv){
     Console * help_message;
 
     void Draw(){
+      KickFollowers();
       DrawSphereFunction( center, radius, 30, &tex);
       glColor4f(0.5f,0.5f,0.5f,0.5f);
       //SortSurface(&surf, GetProjection()->Z());
       DrawLineAt(patient_name, V3f(-100,-112,10), 10);
       if(show_surface){
-	DrawSurface(surf);
+	DrawSurface(surf, & surface_type);
       }else{
-	KickFollowers();
 	DrawBorder(&bdr);
       };
       help_message->Draw();
@@ -211,6 +238,10 @@ int main(int argc, char ** argv){
   sphere_tuner_z.bind('F');
 
   focuser.bind('C');
+
+  colorer.bind('\\');
+  wirerer.bind(']');
+  limiter.bind('[');
 
   const int MAX_SCALE = 9;
   Kerneler scale[MAX_SCALE];
@@ -252,7 +283,7 @@ int main(int argc, char ** argv){
     AddLine("           Enter : Save modifications");
 
 
-  UpdateBorder();
+  SphereMoved();
 
   GetScene()->run( & scene );
 

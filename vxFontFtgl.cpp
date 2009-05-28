@@ -11,7 +11,7 @@
 */
 
 #ifndef KDL_CYGWIN
-#define USE_FTGL 1
+//#define USE_FTGL 1
 #endif
 
 #if USE_FTGL

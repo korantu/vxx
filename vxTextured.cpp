@@ -151,7 +151,7 @@ bool UpdateTextured(Textured & t, Range & r){
 	  */
 
 	  float f_res = res;
-	  f_res *= f_res; f_res /= 60.0;
+	  // f_res *= f_res; f_res /= 60.0;
 
 	  int r = f_res;
 	  int g = f_res;

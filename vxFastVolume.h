@@ -40,6 +40,7 @@ class FastVolume {
    
   struct t_tr{
     int width, height, depth;
+    V3f x, y, z;
     float c_r, c_a, c_s;
   }tr;
 

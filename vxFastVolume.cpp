@@ -470,7 +470,24 @@ void FastVolume::set_band(){
 
 //Here we assume that (128,128,128) is a center.
 float FastVolume::SampleCentered(float x_in, float y_in, float z_in){
-  return Sample(x_in+128.0, y_in+128.0, z_in+128.0);
+  V3f in(x_in, y_in, z_in);
+
+  /*  V3f x(-0.999858, -0.012196, 0.011594);
+  V3f y(-0.011401, -0.015820, -0.999810);
+  V3f z(0.012377, -0.999800, 0.015678);
+  */
+ V3f r(-0.999858, -0.011401, 0.012377);
+  V3f a(-0.012196, -0.015820, -0.999800);
+  V3f s(0.011594, -0.999810, 0.015678);
+  /*  V3f x(-0.999858, -0.012196, 0.011594);
+  V3f y(-0.011401, -0.015820, -0.999810);
+  V3f z(0.012377, -0.999800, 0.015678);
+  */
+  V3f x(-1, -0, 0);
+  V3f y(0, 0, 1);
+  V3f z(0, -1, 0);
+  //HACK coordinate transformation.
+  return Sample(128-x_in, 128+z_in, 128+y_in);
 };
 
 //Well-writen first;
