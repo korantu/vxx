@@ -73,6 +73,13 @@ void DrawSphereFunction(const V3f & where,
 };
 */
 
+void EmitVertex(const V3f * v, const V3f * n, const V3f * c){
+  if(c)glColor3f(*c);
+  //HACK - find out why the normal has to be negated
+  glNormal3f(-n->x, -n->y, -n->z );
+  glVertex3f(*v);
+};
+
 // Draw every triangle of the surface
 void DrawSurface( const Surface & surf, DrawProperties * outer_props){
   DrawProperties props = outer_props ? (*outer_props) : DrawProperties(); //Defaults.
@@ -84,20 +91,45 @@ void DrawSurface( const Surface & surf, DrawProperties * outer_props){
 
   glColor3f(0.3,0.5,0.4);
   bool colors_valid = (surf.c.size() == surf.v.size()); //make sure there are colors to use.
+
+  V3f v[3];   //Current triangle vertices.
+  float l[3]; //Current limiting length.
+
   for(vector<V3i>::const_iterator i = surf.tri.begin(); i != surf.tri.end(); i++){
     //check if this triangle is worth bothering with:
-    if( props.limited && ( (props.center - surf.v[(*i)[0]]).length() > props.radius ) ) continue;
 
+    //TODO - maybe performance issue (?)
+    v[0] = surf.v[(*i)[0]];
+    v[1] = surf.v[(*i)[1]];
+    v[2] = surf.v[(*i)[2]];
+
+    //If it is potentially not in view, make sure it is _really_ not in view.
+    if( props.limited ){
+      bool in_view = false; 
+      for(int j = 0; j < 3; j++)l[j] = (props.center - v[j]).length(); 
+      for(int j = 0; j < 3; j++){ //If a vertex is inside - then in view.
+	if (l[j] < props.radius ){
+	  in_view = true; break;
+	};      
+      };
+      if(!in_view)continue; //Not in view. 
+
+      //Now, let's deal with polygons whith outer vertices:
+      for(int j = 0; j < 3; j++){
+	if ( l[j] > props.radius ){
+	  v[j] *= props.radius / l[j];
+	};      
+      };
+    };
+   
+    //Ok, now just render the triangle:
     for(int vertex = 0; vertex < 3; vertex++){ //Each verex of a face
-      if(colors_valid && props.colored)glColor3f(surf.c[(*i)[vertex]]);
-      glNormal3f(-surf.n[(*i)[vertex]].x, -surf.n[(*i)[vertex]].y, -surf.n[(*i)[vertex]].z );
-      glVertex3f(surf.v[(*i)[vertex]]);
+      EmitVertex(&v[vertex], &surf.n[(*i)[vertex]],
+		 (colors_valid && props.colored)?&surf.c[(*i)[vertex]]:NULL);
     }; //Each vertex of a face
     if(props.wireframe){
-      //HACK; remove duplication
-      if(colors_valid && props.colored)glColor3f(surf.c[(*i)[0]]);
-      glNormal3f(-surf.n[(*i)[0]].x, -surf.n[(*i)[0]].y, -surf.n[(*i)[0]].z );
-      glVertex3f(surf.v[(*i)[0]]);
+      EmitVertex(&v[0], &surf.n[(*i)[0]],
+		 (colors_valid && props.colored)?&surf.c[(*i)[0]]:NULL);
       glEnd();
       glBegin(GL_LINES);
     };
