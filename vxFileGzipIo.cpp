@@ -58,7 +58,7 @@ Io & Read(Io & in, T * result){
 //If we do not want to use out-parameter.
 template<class T>
 T ReadDirectly(Io & in){
-  T result;
+  T result = 0; //Make sure it is not garbage.
   Read<T>(in, &result);
   return result;
 }; 

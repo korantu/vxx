@@ -346,7 +346,9 @@ bool MgzReadHeader(Io & io, MgzLoader::Header * header){
   const int USED_SPACE_SIZE   = (3*sizeof(float)+4*3*sizeof(float));
   int unused_space_size = UNUSED_SPACE_SIZE-sizeof(short) ;
 
-  int   width, height, depth, nframes, x, y, z, dof;
+  //Unused
+  //int  width, height, depth, x, y, z;
+  int  nframes, dof;
   short good_ras_flag;
 
   float  xsize, ysize, zsize, x_r, x_a, x_s, y_r, y_a, y_s;
@@ -391,7 +393,7 @@ bool MgzReadHeader(Io & io, MgzLoader::Header * header){
 
   io.set_position(io.get_position() + unused_space_size);
 
-  int cur_data;
+  //int cur_data;
 
   return io && MgzSanityCheck(*header);
 }; 

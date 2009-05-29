@@ -48,7 +48,7 @@ struct ConsoleImplementation: Console {
   bool enable;
   V3f pos;
   float height;
-  int max_lines;
+  size_t max_lines;
   std::vector<std::string> lines;
   
 
@@ -66,7 +66,7 @@ struct ConsoleImplementation: Console {
   void Draw(){
     glColor3f(0.0, 0.0, 0.0);
     if(!enable)return;
-    for(int i = 0; i < lines.size(); i++){
+    for(size_t i = 0; i < lines.size(); i++){
       V3f offset(0, -height * 1.2*i, 0);
       DrawLineAt(lines[i], pos+offset, height);
     };

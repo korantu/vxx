@@ -83,12 +83,13 @@ bool ReadPialHeader(Io & data, int * vertices, int * triangles){
 bool write_surface_binary_template(Surface * surf, std::string name, std::string contents){
   int vertices_number;     //for the number of vertices
   int triangles_number;       //for the number of triangles
-  bool result = true;
+  //Unused
+  //bool result = true;
   Io data(contents);
   if(!ReadPialHeader(data, &vertices_number, &triangles_number))return false;
 
-  if(surf->v.size() != vertices_number ||
-     surf->tri.size() != triangles_number ) return false; //File mismatch
+  if(surf->v.size() != (size_t)vertices_number ||
+     surf->tri.size() != (size_t)triangles_number ) return false; //File mismatch
   
   //ok, now write the stuff back
   //Points
@@ -113,7 +114,8 @@ bool read_surface_binary_from_string(Surface & surf, std::string content){
 
   int vertices_number;     //for the number of vertices
   int triangles_number;       //for the number of triangles
-  bool result = true;
+  //Unused
+  //bool result = true;
 
   int start_index = surf.v.size();
 
@@ -383,7 +385,7 @@ float AnalyzePoint(const V3f & pnt, const V3f & n, FastVolume & volume, V3f & ou
  */
 void AnalyzeSurface(Surface & surf, FastVolume & vol){
   surf.c.clear();
-  for(int i = 0; i < surf.v.size(); i++){
+  for(size_t i = 0; i < surf.v.size(); i++){
     V3f c;
     AnalyzePoint(surf.v[i], surf.n[i], vol, c);
     surf.c.push_back(c);
@@ -400,7 +402,7 @@ struct usual {
 } comparator;
 
 void Generate(Connectivity & net, Surface & surf){
-  for(int i = 0; i < surf.tri.size(); i++){
+  for(size_t i = 0; i < surf.tri.size(); i++){
     Link(net, surf.tri[i].x, surf.tri[i].y);
     Link(net, surf.tri[i].y, surf.tri[i].z);
     Link(net, surf.tri[i].z, surf.tri[i].x);
@@ -558,7 +560,7 @@ void rasterize_surface(Surface & surf,
 //* change color of already marked regions*//
 
 void unmark(Surface & in, V3f where, float radius){
-	for(int i = 0; i < in.v.size(); i++){
+	for(size_t i = 0; i < in.v.size(); i++){
 	  float dist = (in.v[i] - where).length();
 	  if(dist < radius){
 			in.c[i].x = 0.0;
@@ -698,7 +700,7 @@ void UndoPushPoint(Surface & surf){
 void PushPoint(Surface & surf, V3f point, bool push, int radius){
   action_t to_undo;
   //  float radius = 6; //modification radius
-  for(int i = 0; i < surf.v.size(); i++){
+  for(size_t i = 0; i < surf.v.size(); i++){
     float proportion = SmoothBell ( DistanceSphere ( point, surf.v[i] ) / radius );
     if ( proportion > 0.01f ) {
       float l = surf.v[i].length();
@@ -718,7 +720,7 @@ int NearestPointIndex(Surface * surf, V3f point){
   int nearest_index = 0;
   float nearest_distance = 10000.0f; //A couple hundred million miles.
   
-  for(int i = 0; i < surf->v.size(); i++){
+  for(size_t i = 0; i < surf->v.size(); i++){
     float dist = (surf->v[i] - point).length();
     if( dist < nearest_distance ){
       nearest_index = i;

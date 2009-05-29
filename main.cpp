@@ -42,11 +42,11 @@ struct Kerneler : Action {
   void Start(){kernel = val;};
 };
 
-struct : Action {
+struct SurfaceSwitcher: Action {
   void Start(){ show_surface = !show_surface; };
 } surface_switcher;
 
-struct : Action {
+struct SpherePlacer: Action {
   
   void Do(){
     Intersection isct = IntersectRaySurface(GetMotion()->sight, &surf);
@@ -59,21 +59,21 @@ struct : Action {
 } sphere_placer;
 
 //Moving projection along the axis.
-struct : Action {
+struct SphereTunerZ : Action {
   void Do(){
     center += GetProjection()->Z() * ((float)GetMotion()->dy / 4.0); 
   };
 } sphere_tuner_z;
 
 
-struct : Action {
+struct SphereTunerXY : Action {
   void Do(){
     center += GetProjection()->X() * ((float)GetMotion()->dx / 2.0); 
     center += GetProjection()->Y() * ((float)GetMotion()->dy / -2.0); 
   };
 } sphere_tuner_xy;
 
-struct : Action {
+struct Focuser : Action {
   void Start(){
     GetProjection()->Focus(center);
   };
@@ -82,7 +82,7 @@ struct : Action {
 
 
 //Ajust the sphere.
-struct : Action {
+struct SphereSizer : Action {
   
   int x_old, y_old;
   V3f center_old; float radius_old;

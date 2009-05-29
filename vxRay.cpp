@@ -79,7 +79,7 @@ Intersection IntersectRaySphere(const Ray & ray, const V3f & center, float r){
 
 Intersection IntersectRaySurface(const Ray & pointer, Surface * surf){  
   Intersection result;
-  for(int i = 0; i < surf->v.size(); i++){
+  for(size_t i = 0; i < surf->v.size(); i++){
     Intersection contact_point = IntersectRaySphere(pointer, surf->v[i], 10);
     if(contact_point.hit){
       if(!result.hit){result = contact_point;}else{

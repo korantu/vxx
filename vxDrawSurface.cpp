@@ -24,7 +24,7 @@
   b: [-PI/2..PI/2].
  */
 
-DrawProperties::DrawProperties(): colored(true), limited(false), wireframe(false) {};
+DrawProperties::DrawProperties(): colored(true), limited(false), wireframe(false), center(0,0,0), radius(1) {};
 
 
 void DrawSphereVertex(float a, 
