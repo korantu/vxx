@@ -14,8 +14,9 @@
 
 #include "vxTextured.h"
 #include "vxOpenGlTools.h"
+#ifdef KDL_CYGWIN
 #include "GL/glext.h"
-
+#endif
 //making compiler shut up; in vain.
 #define BPP 4 
 #define SIZE 64

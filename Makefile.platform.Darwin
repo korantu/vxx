@@ -1,0 +1,28 @@
+DEPS := $(PWD)/deps/
+
+#GLFW; includes use GL/glfw.h, which is default on linux.
+GLFW_STATIC:= $(DEPS)/glfw/lib/macosx/libglfw.a
+GLFW_INCLUDE:= $(DEPS)/glfw/include
+
+#GTEST
+GTEST_STATIC:=$(DEPS)/lib/libgtest_main.a $(DEPS)/lib/libgtest.a 
+GTEST_INCLUDE:=$(DEPS)/include
+
+#FTGL
+FTGL_STATIC:=$(DEPS)/lib/libftgl.a
+FTGL_INCLUDE:=$(DEPS)/include
+
+FREETYPE_INCLUDE:=$(DEPS)/freetype/include
+FREETYPE_STATIC:=$(DEPS)/lib/libfreetype.a
+
+LINKFLAGS := -framework AGL -framework OpenGL -framework Carbon -lz
+CXXFLAGS := -mmacosx-version-min=10.4 -DMACOSX
+
+INCLUDES := -I$(GLFW_INCLUDE) -I$(GTEST_INCLUDE) -I$(FTGL_INCLUDE) -I$(FREETYPE_INCLUDE)
+
+ETAGSFLAGS := --declarations
+
+tt:
+	echo $(INCLUDES)
+
+-include Makefile
