@@ -12,6 +12,7 @@
 
 #include <string>
 #include <vector>
+#include <stdlib.h>
 
 #include "vxTextured.h"
 #include "vxAction.h"
@@ -86,7 +87,8 @@ void LoadPatient(std::string patient, bool left){
   MgzLoader mri(*vol);
   mri.Load(patient+"/mri/t1.mgz");
 
-  std::string pial_name = patient + (left ? "/surf/lh.pial":"/surf/rh.pial"); 
+  std::string pial_name = patient + (left ? "/surf/lh.":"/surf/rh."); //add the proper extension 
+  pial_name += getenv("VXX_SOURCE")?getenv("VXX_SOURCE"):"pial";
 
   printf("Loading %s\n", pial_name.c_str());
 
