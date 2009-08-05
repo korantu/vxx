@@ -10,9 +10,9 @@ function report_status(){
 
 function dump_status(){
 DEST=config.sh
-echo "VXX_NO_FULLSCREEN=$VXX_NO_FULLSCREEN" > $DEST
-echo "VXX_SOURCE=$VXX_SOURCE" >> $DEST
-echo "VXX_FILES=$VXX_FILES" >> $DEST
+echo "export VXX_NO_FULLSCREEN=$VXX_NO_FULLSCREEN" > $DEST
+echo "export VXX_SOURCE=$VXX_SOURCE" >> $DEST
+echo "export VXX_FILES=$VXX_FILES" >> $DEST
 };
 
 if [[ -f "config.sh" ]]; then 
@@ -44,4 +44,5 @@ done;
 
 #Go-go-go!
 dump_status;
-echo ./vxx.t $VXX_FILES
+source config.sh
+./vxx.t $VXX_FILES
