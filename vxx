@@ -45,4 +45,5 @@ done;
 #Go-go-go!
 dump_status;
 source config.sh
-./vxx.t $VXX_FILES
+#append .t to itself to get the actual binary.
+$0.t $VXX_FILES
