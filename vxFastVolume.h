@@ -168,6 +168,9 @@ class FastVolume {
 
 };
 
+//Coordinate conversion.
+float * SurfaceToVolume(float * );
+float * VolumeToSurface(float * );
  
 
 #endif // __vxFastVolume_h__

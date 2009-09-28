@@ -468,6 +468,10 @@ void FastVolume::set_band(){
 
 };
 
+//Coordinate conversion.
+float * SurfaceToVolume(float * );
+float * VolumeToSurface(float * );
+
 //Here we assume that (128,128,128) is a center.
 float FastVolume::SampleCentered(float x_in, float y_in, float z_in){
   V3f in(x_in, y_in, z_in);

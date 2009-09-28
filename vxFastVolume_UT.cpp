@@ -23,5 +23,10 @@ TEST(MAIN, FastVolume){
   EXPECT_TRUE(mri.Load("data/brainmask.mgz"));
 };
 
+TEST( Simple, FastVolume ){
+  float * in = {0,0,0};
+  float * start = {0,0,0};
+  EXPECT_NE(in[0], start[0]);
+};
 
 //End of vxFastVolume_UT.cpp
