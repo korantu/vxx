@@ -16,6 +16,7 @@
 #include "vxValidatable.h"
 #include "vxColor.h"
 #include "vxSmoothBell.h"
+#include "vxTools.h"
 
 #ifndef ABS
 #define ABS(X) (((X)>0)?(X):(-(X))))
@@ -128,7 +129,8 @@ std::vector<int> undo_buffer;
 FastVolume::FastVolume()
 {
   vol = new t_vox[n_voxels]; 
-  mask = new unsigned char [n_voxels];
+  mask = new unsigned char [n_voxels]; //Deprecated...
+  _mask = new unsigned char [n_voxels]; 
   depth = new unsigned char [n_voxels];
   
   use_scope = false;
@@ -468,9 +470,15 @@ void FastVolume::set_band(){
 
 };
 
-//Coordinate conversion.
-float * SurfaceToVolume(float * );
-float * VolumeToSurface(float * );
+//Coordinate conversion, get volume from the surface.
+V3f FastVolume::FromSurface(const V3f & in){
+  return V3f(128-in.x, 128+in.z, 128+in.y); 
+};
+
+//Convinience
+float FastVolume::SampleCentered(const V3f & where){
+  return SampleCentered(where.x, where.y, where.z);
+};
 
 //Here we assume that (128,128,128) is a center.
 float FastVolume::SampleCentered(float x_in, float y_in, float z_in){
@@ -492,6 +500,10 @@ float FastVolume::SampleCentered(float x_in, float y_in, float z_in){
   V3f z(0, -1, 0);
   //HACK coordinate transformation.
   return Sample(128-x_in, 128+z_in, 128+y_in);
+};
+
+float FastVolume::Sample(const V3f & where){
+  return Sample(where.x, where.y, where.z);
 };
 
 //Well-writen first;
@@ -755,6 +767,74 @@ void FastVolume::Set(int x, int y, int z, short data){
 short FastVolume::Get( int x, int y, int z) const{
   return vol[getOffset(x ,y, z)];
 };
+
+bool FastVolume::GetMask( const V3f & c, unsigned int plane ) const {
+  ASSERT(plane < 8, "Planes 0-7");
+  return _mask[getOffset(c.x, c.y, c.z)] & (1 << plane);
+};
+
+void FastVolume::SetMask( const V3f & c, unsigned int plane, bool val ){
+  ASSERT(plane < 8, "Planes 0-7");
+  if(val){
+    _mask[getOffset(c.x, c.y, c.z)] |= (1 << plane);
+  }else{
+    _mask[getOffset(c.x, c.y, c.z)] &= (0xff - (1 << plane));
+  };
+};
+
+void FastVolume::SetBlock( const V3f & c, unsigned int plane, bool val ){
+  ASSERT(plane < 8, "Planes 0-7");
+  for(int i = -1; i <= 1; i++)
+    for(int j = -1; j <= 1; j++)
+      for(int k = -1; k <= 1; k++)
+	{
+	  if(val){
+	    _mask[getOffset(c.x+i, c.y+j, c.z+k)] |= (1 << plane);
+	  }else{
+	    _mask[getOffset(c.x+i, c.y+j, c.z+k)] &= (0xff - (1 << plane));
+	  };
+	};
+  
+};
+
+//Parametrizes surface:
+int FastVolume::RasterizeTriangle (  const V3f & a,  
+				      const V3f & b,
+				      const V3f & c,
+				      unsigned int plane ){
+  ASSERT(plane < 8, "Planes 0-7");
+
+  
+
+  //Iterative solution.
+  V3f x(b-a);
+  V3f y(c-a); 
+  int x_steps = x.length();
+  int y_steps = y.length();
+  if(x_steps == 0 || y_steps == 0)return 0;
+  float dx = 1.0f/x_steps; 
+  float dy = 1.0f/y_steps;
+  V3f loc;
+
+
+  int count = 0;
+  for(int ix = 0; ix <= x_steps; ix++){
+    for(int iy = 0; iy <= y_steps; iy++){
+      float fx = dx*ix; //Paramerization
+      float fy = dy*iy;
+      if (true /*(fx+fy) <= 1.0*/) { //we are in the triangle
+	loc.set( x.x*fx+y.x*fy+a.x , x.y*fx+y.y*fy+a.y , x.z*fx+y.z*fy+a.z );
+	//SetBlock(loc, plane, true);
+	SetMask(loc, plane, true);
+	count ++;
+      };
+    };
+  };
+
+  return count;
+
+};
+
 
 
 // End of vxFastVolume.cpp

@@ -15,7 +15,7 @@ FTGL_INCLUDE:=$(DEPS)/include
 FREETYPE_INCLUDE:=$(DEPS)/freetype/include
 FREETYPE_STATIC:=$(DEPS)/lib/libfreetype.a
 
-LINKFLAGS := -lGL -lGLU -lXrandr -lm -lz 
+LINKFLAGS := -rdynamic -lGL -lGLU -lXrandr -lm -lz 
 CXXFLAGS := -DLINUX
 
 INCLUDES := -I$(GLFW_INCLUDE) -I$(GTEST_INCLUDE) -I$(FTGL_INCLUDE) -I$(FREETYPE_INCLUDE)

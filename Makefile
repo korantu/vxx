@@ -27,6 +27,7 @@ tags:
 git:
 	git remote add origin git@github.com:korantu/vxx.git
 
+#All the test-cases:
 vxVector.t: vxVector_UT.o vxVector.o
 vxRange.t: vxRange_UT.o vxRange.o
 vxScene.a: vxAction.o vxScene.o vxDrawSphere.o vxDrawPlane.o vxDrawSurface.o vxValidatable.o vxColor.o vxColorLookupTable.o vxSmoothBell.o vxFileGzipIo.o vxFollower.o vxFastVolume.o vxTextured.o vxDrawSurface.o vxSurface.o vxVector.o vxProjection.o vxMotion.o vxOpenGlTools.o vxRay.o vxRange.o vxLighting.o vxMouseRay.o vxFontFtgl.o vxBinaryBlobs.o vxSurfaceSlicer.o 
@@ -38,12 +39,13 @@ vxMouseRay.t: vxMouseRay_UT.o vxMouseRay.o vxScene.a
 vxTouchAction.t: vxTouchAction_UT.o vxTouchAction.o
 vxDrawSurface.t: vxDrawSurface_UT.o vxScene.a
 vxDrawSphere.t: vxDrawSphere_UT.o vxScene.a
-vxFastVolume.a: vxFastVolume.o vxLoader.o vxFileGzipIo.o vxValidatable.o vxSmoothBell.o vxColor.o vxColorLookupTable.o  
+vxFastVolume.a: vxFastVolume.o vxLoader.o vxFileGzipIo.o vxValidatable.o vxSmoothBell.o vxColor.o vxColorLookupTable.o vxTools.o
 vxFastVolume.t: vxFastVolume_UT.o vxFastVolume.a
 vxSurface.t: vxSurface_UT.o vxSurface.o vxScene.a vxFastVolume.a
 vxOpenGlTools.t: vxOpenGlTools_UT.o vxScene.a 
 vxTextured.t: vxDrawSurface.o vxTextured_UT.o vxTextured.o vxLoader.o vxScene.a
 vxTest.t: vxTest_UT.o
+vxTools.t : vxTools.o vxTools_UT.o
 vxVrmlOut.t: vxVrmlOut.o vxVrmlOut_UT.o vxSurface.o vxLoader.o vxFileGzipIo.o vxSmoothBell.o vxFastVolume.a
 vxFollower.t:  vxFollower.o vxFollower_UT.o
 vxFontFtgl.t:  vxFontFtgl.o vxFontFtgl_UT.o vxScene.a

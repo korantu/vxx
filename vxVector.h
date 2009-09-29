@@ -98,7 +98,6 @@ void ortoNormalize(V3f &x, V3f &y, V3f &z);
 void say(char *, const V3f &);
 
  
-
 #endif // __vxVector_h__
 
 //End of vxVector.h

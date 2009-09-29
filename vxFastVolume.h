@@ -36,7 +36,7 @@ class FastVolume {
  public:  
 
   
-  //   Transform parameters
+  //   Transform parameters, loaded from an mgz file verbatim.
    
   struct t_tr{
     int width, height, depth;
@@ -49,10 +49,13 @@ class FastVolume {
   typedef short int t_vox; 
  /* Main storage; won't fit on stack */
   t_vox * vol;
-  unsigned char * mask;
+  unsigned char * mask; //Deprecated (?)
   unsigned char * depth;
+  unsigned char * _mask; //Current mask.
 
   /* Constructor/Destructor */
+
+  ///! Allocate storage for the FastVolume.
   FastVolume();
   ~FastVolume();
   
@@ -121,7 +124,11 @@ class FastVolume {
   };
 
   float Sample(float x_in, float y_in, float z_in);
+  float Sample(const V3f &);
   float SampleCentered(float x_in, float y_in, float z_in);
+  float SampleCentered(const V3f &);
+
+  static V3f FromSurface(const V3f &);
 
 
   /* Copy data from linear volume to current one.
@@ -164,7 +171,15 @@ class FastVolume {
   void Set(int x, int y, int z, short data);
   short Get( int x, int y, int z) const;
 
+  /* Inefficient getters and setters, for testing mostly */
+  bool GetMask ( const V3f & c, unsigned int plane ) const ;
+  void SetMask ( const V3f & c, unsigned int plane, bool val );
+  void SetBlock( const V3f & c, unsigned int plane, bool val );
 
+  int RasterizeTriangle (  const V3f & a,  
+			    const V3f & b,
+			    const V3f & c,
+			    unsigned int plane );
 
 };
 
