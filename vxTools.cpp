@@ -38,5 +38,14 @@ void _kdl_panic(const char * problem){
   exit(2);
 };
 
+void _kdl_timer::start(){
+  gettimeofday(&x,NULL);
+};
+
+void _kdl_timer::stop(){
+  timeval now; gettimeofday(&now,NULL);
+  std::cout << name << " : " <<  (1.0*(now.tv_sec-x.tv_sec) + 0.000001*(now.tv_usec-x.tv_usec)) << " s.\n"; 
+};
+
 // End of vx.cpp
 

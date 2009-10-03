@@ -14,11 +14,21 @@
 #define __vxTools_h__
 
 #include <iostream>
+#include <sys/time.h>
+
 #include "vxVector.h"
 
 std::ostream & operator <<(std::ostream & out, V3f v);
 
 #define ASSERT(X,STR) if(!(X)) { _kdl_panic((char *)STR); };
+
+struct _kdl_timer {
+  _kdl_timer(char * _name):name(_name){};
+  timeval x;
+  char * name;
+  void start();
+  void stop();
+};
 
 void _kdl_panic ( const char * problem );
 
