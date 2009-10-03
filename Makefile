@@ -30,7 +30,7 @@ git:
 #All the test-cases:
 vxVector.t: vxVector_UT.o vxVector.o
 vxRange.t: vxRange_UT.o vxRange.o
-vxScene.a: vxAction.o vxScene.o vxDrawSphere.o vxDrawPlane.o vxDrawSurface.o vxValidatable.o vxColor.o vxColorLookupTable.o vxSmoothBell.o vxFileGzipIo.o vxFollower.o vxFastVolume.o vxTextured.o vxDrawSurface.o vxSurface.o vxVector.o vxProjection.o vxMotion.o vxOpenGlTools.o vxRay.o vxRange.o vxLighting.o vxMouseRay.o vxFontFtgl.o vxBinaryBlobs.o vxSurfaceSlicer.o 
+vxScene.a: vxAction.o vxScene.o vxDrawSphere.o vxDrawPlane.o vxDrawSurface.o vxValidatable.o vxColor.o vxColorLookupTable.o vxSmoothBell.o vxFileGzipIo.o vxFollower.o vxFastVolume.o vxTextured.o vxDrawSurface.o vxSurface.o vxVector.o vxProjection.o vxMotion.o vxOpenGlTools.o vxRay.o vxRange.o vxLighting.o vxMouseRay.o vxFontFtgl.o vxBinaryBlobs.o vxSurfaceSlicer.o vxTools.o
 vxScene.t: vxScene_UT.o vxScene.a
 vxRay.t: vxRay_UT.o vxScene.a
 vxAction.t: vxAction_UT.o vxAction.o vxScene.a

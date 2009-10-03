@@ -20,6 +20,7 @@
 #include "vxAction.h"
 #include "vxOpenGlTools.h"
 #include "vxLoader.h"
+#include "vxTools.h"
 
 TEST(MAIN, Surface){
   Surface surf;
@@ -187,12 +188,13 @@ TEST(MAIN, SurfaceWarnings){
 TEST(MAIN, Loading){
   Surface surf;
   Surface surf2;
+  int res;
   std::string contents;
 
   contents = ReadFile("data/lh.pial");
 
   EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
-  system("rm data/lh_saved.pial");
+  res = system("rm data/lh_saved.pial");
   surf.tri[0].x = 1234;
   surf.v[34].x = 1234.0f;
   EXPECT_TRUE(write_surface_binary_template(&surf, "data/lh_saved.pial", contents));
@@ -215,7 +217,7 @@ TEST(MAIN, SortSurface){
 
   int failures = 0;
 
-  for(int i = 0; i < surf.tri.size()-3; i+= 3){
+  for(unsigned int i = 0; i < surf.tri.size()-3; i+= 3){
     V3f a = surf.v[surf.tri[i].x];
     V3f b = surf.v[surf.tri[i+3].x];
     if(a.dot(direction) < b.dot(direction))failures++;
@@ -223,7 +225,7 @@ TEST(MAIN, SortSurface){
   EXPECT_EQ(0, failures);
 };
 
-struct :V3fMapper{
+struct __V3fMapper{
   virtual V3f operator() (V3f in) {return V3f(in.x, in.y, 10*sin(0.001*in.x*in.y));}; 
 }strange_surface;
 
@@ -403,8 +405,8 @@ struct PP : Propagator {
 
   int max_connectivity = 0;
 
-  for(int i = 0; i < net.size(); i++){
-    if(net[i].size() > max_connectivity)
+  for(unsigned int i = 0; i < net.size(); i++){
+    if(net[i].size() > (size_t)max_connectivity)
       max_connectivity = net[i].size();
   };
   
@@ -414,14 +416,32 @@ struct PP : Propagator {
 
 
   Propagate(net, test, 1); //Do one step; 
-  EXPECT_EQ(7, test.size());
+  EXPECT_EQ(7, (int)test.size());
 
 
   Propagate(net, test, 10000, &max_finder); //Do lots of steps; 
-  EXPECT_EQ(104927, test.size());
+  EXPECT_EQ(104927, (int)test.size());
 
   EXPECT_EQ(max_finder.step, 210);
 };
 
+
+TEST (SurfaceRaster, Surface ){
+
+  Surface surf;
+  FastVolume vol;
+
+  std::cout << "Go!";
+
+  EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
+
+  for(vector<V3i>::const_iterator i = surf.tri.begin(); i != surf.tri.end(); i++){
+    V3f a = FastVolume::FromSurface( surf.v[i->x] );
+    V3f b = FastVolume::FromSurface( surf.v[i->y] );
+    V3f c = FastVolume::FromSurface( surf.v[i->z] );
+    vol.RasterizeTriangle(a,b,c,1);
+  };
+ 
+};
 
 //End of vxSurface_UT.cpp

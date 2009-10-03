@@ -128,6 +128,7 @@ class FastVolume {
   float SampleCentered(float x_in, float y_in, float z_in);
   float SampleCentered(const V3f &);
 
+  /// Converter
   static V3f FromSurface(const V3f &);
 
 
@@ -182,10 +183,6 @@ class FastVolume {
 			    unsigned int plane );
 
 };
-
-//Coordinate conversion.
-float * SurfaceToVolume(float * );
-float * VolumeToSurface(float * );
  
 
 #endif // __vxFastVolume_h__
