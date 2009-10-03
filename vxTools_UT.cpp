@@ -27,14 +27,13 @@ TEST(Assertion, Tools){
 
 TEST(Time, Tools){
   int cnt = 1;
-  _kdl_timer t("Useless loop");
-  t.start();
+  TIME(
   for(int i = 0 ; i < 1000000; i++)
     for(int j = 0; j < 1100; j++){
       cnt += i+j;
       if(i == 100 && j == 100)std::cout << "side effect: " << cnt << "\n";
     };
-  t.stop();
+  , "Useless Loop");
 };
 
 //End of vxTools_UT.cpp

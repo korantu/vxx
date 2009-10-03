@@ -21,6 +21,7 @@
 std::ostream & operator <<(std::ostream & out, V3f v);
 
 #define ASSERT(X,STR) if(!(X)) { _kdl_panic((char *)STR); };
+#define TIME(X,STR) if(1) { _kdl_timer a((char *)STR); a.start(); X; a.stop(); };
 
 struct _kdl_timer {
   _kdl_timer(char * _name):name(_name){};
