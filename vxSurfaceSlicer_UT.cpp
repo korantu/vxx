@@ -37,10 +37,10 @@ TEST(MAIN, SurfaceSlicer){
 
   //EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
   GetBorderLine(&_surf, _center, _radius, &_bdr);
-  EXPECT_LT(1000, _surf.v.size());
+  EXPECT_LT((size_t)1000, _surf.v.size());
   EXPECT_NE(0, _surf.v[5].x+_surf.v[5].y+_surf.v[5].z); //something not equal to zero
-  EXPECT_LT(0, _bdr.size()); // shoud find some border.
-  EXPECT_EQ(_bdr.size() % 2, 0); // bdr is pairs;
+  EXPECT_LT((size_t)0, _bdr.size()); // shoud find some border.
+  EXPECT_EQ(_bdr.size() % 2, (size_t)0); // bdr is pairs;
 
   //All within same distance from center
   for(BorderLine::iterator i = _bdr.begin(); i != _bdr.end(); i++){

@@ -813,5 +813,16 @@ void RaiseSurfaceAtPoint(Surface * surf, V3f point, int radius){
   //FixNormals(*surf);
 };
 
+int RasterizeSurface (  FastVolume & vol, 
+			const Surface & surf,  
+			unsigned int plane ){
+  for(vector<V3i>::const_iterator i = surf.tri.begin(); i != surf.tri.end(); i++){
+    V3f a = FastVolume::FromSurface( surf.v[i->x] );
+    V3f b = FastVolume::FromSurface( surf.v[i->y] );
+    V3f c = FastVolume::FromSurface( surf.v[i->z] );
+    vol.RasterizeTriangle(a,b,c,plane);
+  }; 
+  return 0;
+};
 
 // End of vxSurface.cpp

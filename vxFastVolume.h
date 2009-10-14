@@ -112,6 +112,12 @@ class FastVolume {
     return x+(y<<8)+(z<<16);
   };
 
+  static inline int getOffset(const V3f & in){
+    return ((int)in.x)+				\
+      (((int)in.y)<<8)+				\
+      (((int)in.z)<<16);
+  };
+
   inline int SampleInt(int x, int y, int z){
     return(vol[getOffset(x,y,z)]);
   };
@@ -181,6 +187,13 @@ class FastVolume {
 			    const V3f & b,
 			    const V3f & c,
 			    unsigned int plane );
+
+
+  //Helper function.
+  void fill_neighbours(int now, int * nbr);
+  //Rerurns the number of points filled;
+  int FloodFill ( const V3f & start, unsigned int plane,
+		  unsigned int border );
 
 };
  

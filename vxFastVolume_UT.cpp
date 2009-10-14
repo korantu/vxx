@@ -15,6 +15,7 @@
 #include "vxFastVolume.h"
 #include "vxLoader.h"
 #include "vxTools.h"
+#include "vxSurface.h"
 
 #include <iostream>
 
@@ -65,7 +66,7 @@ TEST( RasterizeTriangle, FastVolume ) {
 };
 
 
-TEST( RasterizeTriangleEcplore, FastVolume ) {
+TEST( RasterizeTriangleExplore, FastVolume ) {
   FastVolume m; //A set of bitmasks; eight; 
   V3f a (10,10,10);
   V3f b (10,12,10);
@@ -77,4 +78,5 @@ TEST( RasterizeTriangleEcplore, FastVolume ) {
   EXPECT_TRUE(m.GetMask(b,1));
   EXPECT_TRUE(m.GetMask(c,1));
 }
+
 //End of vxFastVolume_UT.cpp

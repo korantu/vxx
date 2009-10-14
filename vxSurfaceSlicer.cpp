@@ -34,7 +34,7 @@ bool SpliceEdgeWithSphere(const V3f & a, const V3f & b, float radius, V3f * out)
 void GetBorderLine(Surface * in, V3f center, float radius, BorderLine * bdr){
 
   V3f edge[3];
-  for(int i = 0; i < in->tri.size(); i++){
+  for(size_t i = 0; i < in->tri.size(); i++){
     V3f cur_vertex;
     int cur_side = 0;
 

@@ -22,7 +22,7 @@
 #include "vxLoader.h"
 #include "vxTools.h"
 
-TEST(MAIN, Surface){
+TEST(MAIN, DISABLED_Surface){
   Surface surf;
   EXPECT_EQ(2+2, 4);
   EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
@@ -185,7 +185,7 @@ TEST(MAIN, SurfaceWarnings){
 }
 */
 
-TEST(MAIN, Loading){
+TEST(MAIN, DISABLED_Loading){
   Surface surf;
   Surface surf2;
   int res;
@@ -207,7 +207,7 @@ TEST(MAIN, Loading){
   
 };
 
-TEST(MAIN, SortSurface){
+TEST(MAIN, DISABLED_SortSurface){
   Surface surf;
   EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
 
@@ -383,7 +383,7 @@ TEST(MAIN, Connectivity){
 
 
 
-TEST(MAIN, RealMesh){
+TEST(MAIN, DISABLED_RealMesh){
   Surface surf;
   Connectivity net; 
 
@@ -426,7 +426,7 @@ struct PP : Propagator {
 };
 
 
-TEST (SurfaceRaster, Surface ){
+TEST (SurfaceRaster, DISABLED_Surface ){
 
   Surface surf;
   FastVolume vol;
@@ -434,14 +434,67 @@ TEST (SurfaceRaster, Surface ){
   std::cout << "Go!";
 
   EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
-
-  for(vector<V3i>::const_iterator i = surf.tri.begin(); i != surf.tri.end(); i++){
-    V3f a = FastVolume::FromSurface( surf.v[i->x] );
-    V3f b = FastVolume::FromSurface( surf.v[i->y] );
-    V3f c = FastVolume::FromSurface( surf.v[i->z] );
-    vol.RasterizeTriangle(a,b,c,1);
-  };
+  
+  TIME( for(vector<V3i>::const_iterator i = surf.tri.begin(); i != surf.tri.end(); i++){
+      V3f a = FastVolume::FromSurface( surf.v[i->x] );
+      V3f b = FastVolume::FromSurface( surf.v[i->y] );
+      V3f c = FastVolume::FromSurface( surf.v[i->z] );
+      vol.RasterizeTriangle(a,b,c,1);
+    }; ,"Rasterize surface");
  
 };
+
+
+TEST( RasterizeSurface, DISABLED_FastVolume ) {
+  FastVolume m; //A set of bitmasks; eight; 
+  Surface surf;
+  MgzLoader mri(m);
+  EXPECT_TRUE(mri.Load("data/brainmask.mgz"));
+  EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
+
+  TIME( RasterizeSurface( m, surf, 3) , "Offical raster" );
+
+  //  int FloodFill ( const V3f & start, unsigned int plane,
+  //		  unsigned int border );
+
+}
+
+
+TEST( RasterizeSurfaceN, DISABLED_FastVolume ) {
+
+  FastVolume m; //A set of bitmasks; eight; 
+  Surface surf;
+  MgzLoader mri(m);
+  EXPECT_TRUE(mri.Load("data/brainmask.mgz"));
+  EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
+
+  TIME( RasterizeSurface( m, surf, 3) , "Offical raster" );
+
+  int cnt = 0;
+  for(int i = 0; i < m.max; i++){
+    if(0 != m._mask[i])cnt++;
+  };
+  std::cout << "Set " << cnt << " points.\n";
+
+  //  int FloodFill ( const V3f & start, unsigned int plane,
+  //		  unsigned int border );
+
+}
+
+
+TEST( RasterizeSurface, FastVolumeFill ) {
+  FastVolume m; //A set of bitmasks; eight; 
+  Surface surf;
+
+  EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
+
+  TIME( RasterizeSurface( m, surf, 3) , "RasterizeSurface" );
+
+  V3f c = find_center_point(surf);
+  c = m.FromSurface(c);
+  TIME( m.FloodFill ( c, 4, 3 ) , "FloodFill" ); 
+
+}
+
 
 //End of vxSurface_UT.cpp

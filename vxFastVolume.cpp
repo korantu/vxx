@@ -11,6 +11,7 @@
 */
 
 #include <algorithm>
+#include <string.h>
 
 #include "vxFastVolume.h"
 #include "vxValidatable.h"
@@ -168,11 +169,10 @@ void FastVolume::copy(t_vox * arr, int width, int height, int depth)
 };
 
 void FastVolume::reset(){
-  //init mask
-  for(int i = 0; i < n_voxels; i++){
-    mask[i] = 0;
-    depth[i] = 254;
-   };
+  //Init mask.
+  memset(mask, 0, n_voxels);
+  memset(_mask, 0, n_voxels);
+  memset(depth, 254, n_voxels);
   markers.clear();
   plane.clear(); 
   cur_gen=1;
@@ -805,8 +805,7 @@ int FastVolume::RasterizeTriangle (  const V3f & a,
   ASSERT(plane < 8, "Planes 0-7");
 
   
-
-  //Iterative solution.
+  //Parametrize the triangle
   V3f x(b-a);
   V3f y(c-a); 
   int x_steps = x.length();
@@ -816,7 +815,7 @@ int FastVolume::RasterizeTriangle (  const V3f & a,
   float dy = 1.0f/y_steps;
   V3f loc;
 
-
+  // Scan it:
   int count = 0;
   for(int ix = 0; ix <= x_steps; ix++){
     for(int iy = 0; iy <= y_steps; iy++){
@@ -834,6 +833,60 @@ int FastVolume::RasterizeTriangle (  const V3f & a,
   return count;
 
 };
+
+
+//Helper function
+void FastVolume::fill_neighbours(int now, int * nbr) {
+  //  nbr[0] = now;
+  nbr[0]=now+dx; nbr[3]=now-dx; 
+  nbr[1]=now+dy; nbr[4]=now-dy;
+  nbr[2]=now+dz; nbr[5]=now-dz;
+}
+
+//Rerurns the number of points filled;
+// 1. Mark whatever in the list.
+// 2. While marking, check if it was unmarked before and put it in the next list.
+int FastVolume::FloodFill ( const V3f & start, 
+			   unsigned int main_plane,
+			   unsigned int border_plane ){
+  unsigned int start_offset = getOffset(start);
+  std::vector<unsigned int> border;
+  std::vector<unsigned int> next_border;
+  int nbr[7]; //Neighbours at each point.
+
+  //check if the starting place is correct.
+  if(_mask[start_offset] & 
+     ((1<<main_plane) | (1<<border_plane)))return 0;
+  border.push_back(start_offset);
+  _mask[start_offset] &= (1<<main_plane); //mark.
+  
+  int num = 0;
+ 
+  while(border.size() > 0){
+    int hits = 0;
+    next_border.clear();
+    num++;
+    for(std::vector<unsigned int>::const_iterator i = border.begin(); i != border.end(); i++){
+      int now = *i;
+      fill_neighbours(now, nbr);
+      for(int j = 0; j < 6; j++){
+	int cur = nbr[j]; //The point under examination. 
+	if(cur < 0 || cur > max)continue; //Out of bounds.
+	if ( ! ( _mask[cur] & 
+		 ( (1<<main_plane) | (1<<border_plane) ) ) ){
+	  next_border.push_back(cur);
+	  _mask[cur] |= (1<<main_plane); //Do actual masking. 
+	}else{
+	  if( _mask[cur] & (1<<border_plane) ) hits++;
+	};
+      };
+    };
+    //std::cout << num <<  " " << border.size() << " " << next_border.size() << "\n";
+    border = next_border;
+  };
+  return 0;
+};
+
 
 
 

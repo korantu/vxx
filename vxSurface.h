@@ -143,6 +143,12 @@ void SmoothAdvanced(Surface & surf, Connectivity & net, VerticeSet & where);
 void SmoothSurfaceAtPoint(Surface * surf, V3f point, int radius);
 void RaiseSurfaceAtPoint(Surface * surf, V3f point, int radius);
 
+int RasterizeSurface (  FastVolume & vol, 
+			const Surface & a,  
+			unsigned int plane );
+
+
+
 #endif // __vxSurface_h__
 
 //End of vxSurface.h
