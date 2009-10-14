@@ -1,5 +1,6 @@
 #!/bin/bash
 #loading config, if exists; defaults if not.
+#version 0.1
 
 function report_status(){
     echo Configuration: 
@@ -28,7 +29,7 @@ if [[ -n "$@" ]]; then VXX_FILES="$@"; fi;
 
 report_status
 #menu
-select opt in go_go_go surface_type fullscreen_toggle; do 
+select opt in start_editing surface_type fullscreen_toggle; do 
 case $opt in
     surface_type ) 
 	echo enter surface type:
@@ -36,7 +37,7 @@ case $opt in
     fullscreen_toggle )
 	if [[ -z "$VXX_NO_FULLSCREEN" ]]; then VXX_NO_FULLSCREEN=1; 
 	else VXX_NO_FULLSCREEN=""; fi;;
-    go_go_go )
+    start_editing )
 	break;;
 esac;
 report_status;

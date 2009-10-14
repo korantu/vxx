@@ -85,7 +85,7 @@ struct SavingAction: Action {
 void LoadPatient(std::string patient, bool left){
   //TODO - remove if done in vxDrawSphere_UT.h
   MgzLoader mri(*vol);
-  mri.Load(patient+"/mri/t1.mgz");
+  mri.Load(patient+"/mri/T1.mgz");
 
   std::string pial_name = patient + (left ? "/surf/lh.":"/surf/rh."); //add the proper extension 
   pial_name += getenv("VXX_SOURCE")?getenv("VXX_SOURCE"):"pial";
