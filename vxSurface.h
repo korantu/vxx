@@ -139,6 +139,8 @@ void SortSurface(Surface *, V3f direction);
 void PushPoint(Surface & surf, V3f point, bool push, int radius);
 void UndoPushPoint(Surface & surf);
 
+float NearestPointDistance(Surface * surf, V3f point);
+
 void SmoothAdvanced(Surface & surf, Connectivity & net, VerticeSet & where);
 void SmoothSurfaceAtPoint(Surface * surf, V3f point, int radius);
 void RaiseSurfaceAtPoint(Surface * surf, V3f point, int radius);

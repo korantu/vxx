@@ -385,7 +385,7 @@ TEST(MAIN, RealMesh){
   Surface surf;
   Connectivity net; 
 
-  EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
+  EXPECT_TRUE(read_surface_binary(surf, "data/surf/lh.pial"));
 
 
 struct PP : Propagator {
@@ -417,7 +417,7 @@ struct PP : Propagator {
   EXPECT_EQ(7, test.size());
 
 
-  Propagate(net, test, 10000, &max_finder); //Do lots of steps; 
+  Propagate(net, test, 100, &max_finder); //Do lots of steps; 
   EXPECT_EQ(104927, test.size());
 
   EXPECT_EQ(max_finder.step, 210);

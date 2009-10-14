@@ -46,7 +46,7 @@ Section "Vxx (required)"
   
   ; Put file there
   File "vxx.exe"
-  File "vxx.pdf"
+  ;File "vxx.pdf"
   File "vxx.ico"
   File "cygwin1.dll"
   File "cygz.dll"
@@ -78,7 +78,7 @@ Section "Start Menu Shortcuts"
 
   CreateDirectory "$SMPROGRAMS\Vxx"
   CreateShortCut "$SMPROGRAMS\Vxx\Vxx.lnk" "$INSTDIR\vxx.exe" "example_data" "$INSTDIR\vxx.ico" 0
-  CreateShortCut "$SMPROGRAMS\Vxx\Vxx Documentation.lnk" "$INSTDIR\vxx.pdf" "" "" 0
+  CreateShortCut "$SMPROGRAMS\Vxx\Vxx Documentation.lnk" "http://sites.google.com/site/vxxsoftware/" "" "" 0
   CreateShortCut "$SMPROGRAMS\Vxx\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   
 SectionEnd

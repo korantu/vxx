@@ -51,7 +51,6 @@ class FastVolume {
   t_vox * vol;
   unsigned char * mask;
   unsigned char * depth;
-
   /* Constructor/Destructor */
   FastVolume();
   ~FastVolume();

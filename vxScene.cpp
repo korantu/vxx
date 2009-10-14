@@ -140,7 +140,7 @@ Scene * Scene::run(Action * to_draw){
     };
 
     //Setting the mode.
-    float FS=Fullscreen()?1:0.5; //use all or half a screen;
+    float FS=Fullscreen()?1:0.25; //use all or half a screen;
     if( !glfwOpenWindow( modes[better_mode].Width*FS,
 			 modes[better_mode].Height*FS,
 			 0,0,0,0, 16,0,

@@ -13,7 +13,9 @@
 #ifndef __vxColor_h__
 #define __vxColor_h__
 
+#ifndef WIN32
 #include <GL/glfw.h>
+#endif
 #include <vector>
 #include <string>
 

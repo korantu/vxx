@@ -373,7 +373,11 @@ float AnalyzePoint(const V3f & pnt, const V3f & n, FastVolume & volume, V3f & ou
   out.x = volume.SampleCentered(pnt.x+n.x, pnt.y+n.y, pnt.z+n.z);
   out.y = volume.SampleCentered(pnt.x+2*n.x, pnt.y+2*n.y, pnt.z+2*n.z);
   out.z = volume.SampleCentered(pnt.x+3*n.x, pnt.y+3*n.y, pnt.z+3*n.z);
+#ifndef WIN32
   float m = out.min();
+#else
+  float m = out.minimum_component();
+#endif
   out -= V3f(m, m, m);
   if(out.length()>0.0001) out /= out.length();
   return 0;
@@ -717,17 +721,31 @@ void PushPoint(Surface & surf, V3f point, bool push, int radius){
 };
 
 int NearestPointIndex(Surface * surf, V3f point){
-  int nearest_index = 0;
-  float nearest_distance = 10000.0f; //A couple hundred million miles.
-  
-  for(size_t i = 0; i < surf->v.size(); i++){
-    float dist = (surf->v[i] - point).length();
-    if( dist < nearest_distance ){
-      nearest_index = i;
-      nearest_distance = dist;
-    };
-  };
-  return nearest_index;
+	int nearest_index = 0;
+	float nearest_distance = 10000.0f; //A couple hundred million miles.
+
+	for(size_t i = 0; i < surf->v.size(); i++){
+		float dist = (surf->v[i] - point).length();
+		if( dist < nearest_distance ){
+			nearest_index = i;
+			nearest_distance = dist;
+		};
+	};
+	return nearest_index;
+}; 
+
+float NearestPointDistance(Surface * surf, V3f point){
+	int nearest_index = 0;
+	float nearest_distance = 10000.0f; //A couple hundred million miles.
+
+	for(size_t i = 0; i < surf->v.size(); i++){
+		float dist = (surf->v[i] - point).length();
+		if( dist < nearest_distance ){
+			nearest_index = i;
+			nearest_distance = dist;
+		};
+	};
+	return nearest_distance;
 }; 
 
 //Uses existing connectivity.

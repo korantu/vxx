@@ -72,9 +72,15 @@
 
       V3 cross(const V3 & a) const { V3 tmp; tmp.cross(*this, a); return tmp; };
 
-      T min() const {return (x < y)?
-	  ((x < z)?x:z):
-          ((y < z)?y:z);};
+#ifndef WIN32
+      T min() const {
+		  return (x < y)?((x < z)?x:z):((y < z)?y:z);
+	  };
+#else
+      T minimum_component() const {
+		  return (x < y)?((x < z)?x:z):((y < z)?y:z);
+	  };
+#endif
 
       T dot(const V3 & a) const { return x*a.x+y*a.y+z*a.z;};
 
@@ -86,7 +92,11 @@
 typedef V3<int> V3i; //integer vector
 typedef V3<float> V3f; // float vector
 
+#ifndef WIN32
 float min(const V3f &);
+#else
+float minimum_component(const V3f &);
+#endif
 
 ///Rotate a vector along an axis
 V3f rot_x(V3f in, float r);

@@ -16,7 +16,10 @@
 #include <string.h>
 #include <vector>
 #define GLFW_DLL
+
+#ifndef WIN32
 #include "GL/glfw.h"
+#endif
 
 #include "vxVector.h"
 #include "vxColorLookupTable.h"
@@ -59,7 +62,9 @@ void ColorMapper::map(int & r, int & g, int &b, int i){
 void ColorMapper::map(int i){
   if(i>200)i=200;
   if(i<0)i=0;
+#ifndef WIN32
   glColor4b(col[i*3]>>1,col[i*3+1]>>1,col[i*3+2]>>1, 10);
+#endif
 };
 
 
