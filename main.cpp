@@ -120,6 +120,7 @@ struct PickingAction: Action {
       FixNormals(surf);
       Modify(&surf, pos); //Call for the modification.
       AnalyzeSurface(surf, vol);
+	  MakeSurfaceLists(surf); //KDL TODO take into account properties
       surf.Invalidate();
     };
   };
@@ -157,6 +158,8 @@ struct UnPushingAction: Action {
       FixNormals(surf);
       AnalyzeSurface(surf, vol);
       surf.Invalidate();
+	  MakeSurfaceLists(surf); //KDL TODO take into account properties
+
   }
 } unpusher;
 

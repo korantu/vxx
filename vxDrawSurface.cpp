@@ -80,14 +80,30 @@ void EmitVertex(const V3f * v, const V3f * n, const V3f * c){
   glVertex3f(*v);
 };
 
+int listID = -1;
+int maxID = 0;
 // Draw every triangle of the surface
-void DrawSurface( const Surface & surf, DrawProperties * outer_props){
+void DrawSurface(const Surface & surf, DrawProperties * outer_props){
+	if( listID < 0 ){ //Noone bothered creating the lists explicitly yet.
+		MakeSurfaceLists(surf, outer_props);
+	};
+	for(int id = listID; id <= maxID; id++)glCallList(id);
+};
+// Draw every triangle of the surface
+void MakeSurfaceLists( const Surface & surf, DrawProperties * outer_props){
   DrawProperties props = outer_props ? (*outer_props) : DrawProperties(); //Defaults.
+  GLenum GL_PRIMITIVE = props.wireframe?GL_LINES:GL_TRIANGLES;
 
-  if(props.wireframe)
-    glBegin(GL_LINES);
-  else
-    glBegin(GL_TRIANGLES);
+	if(listID > 0){
+		glDeleteLists(listID, 1 + (maxID - listID) ); 
+	}else{
+		listID = glGenLists(1);
+	};
+	maxID = listID;
+	glNewList(listID, GL_COMPILE); 
+	  int k = 100000;
+
+  glBegin(GL_PRIMITIVE);
 
   glColor3f(0.3,0.5,0.4);
   bool colors_valid = (surf.c.size() == surf.v.size()); //make sure there are colors to use.
@@ -96,6 +112,15 @@ void DrawSurface( const Surface & surf, DrawProperties * outer_props){
   float l[3]; //Current limiting length.
 
   for(vector<V3i>::const_iterator i = surf.tri.begin(); i != surf.tri.end(); i++){
+  		  if(!(k--)){ //Seem like 100000+ triangles is too much for a list. Split them.
+			k = 100000;
+			glEnd();
+			glEndList();
+			maxID++;
+	        glNewList(maxID, GL_COMPILE); 
+ 		    glBegin(GL_PRIMITIVE);
+		  };
+
     //check if this triangle is worth bothering with:
 
     //TODO - maybe performance issue (?)
@@ -135,8 +160,8 @@ void DrawSurface( const Surface & surf, DrawProperties * outer_props){
     };
   }; //Each face
   glEnd();
+  glEndList();
 };
-
 
 //Draw every triangle of the surface, using lines mode.
 void DrawSurfaceLines( const Surface & surf){

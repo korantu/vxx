@@ -28,6 +28,7 @@ struct DrawProperties {
 };
 
 void DrawSurface( const Surface & surf, DrawProperties * properties = NULL );
+void MakeSurfaceLists(const Surface & surf, DrawProperties * properties = NULL );
 void DrawSurfaceLines( const Surface & surf );
 void DrawSphereFunction( const V3f & where, 
 			 float radius, 
