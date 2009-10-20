@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxFastVolume.cpp
+*  file vxFastVolume.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

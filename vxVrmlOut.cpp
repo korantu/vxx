@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxVrmlOut.cpp
+*  file vxVrmlOut.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

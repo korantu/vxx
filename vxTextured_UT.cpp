@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxTextured_UT.cpp
+* file vxTextured_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

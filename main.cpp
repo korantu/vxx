@@ -1,3 +1,22 @@
+/**
+* 
+* @file main.cpp
+*
+* This test file is a part of VoxelBrain software.
+* 
+* (c) Nanyang Technological University
+*
+*  Author: Konstantin Levinski
+*
+*/
+
+/*!
+	\mainpage Programmer's guide to the VASET code base.
+    Most processing takes place in classes derived from Action.
+    They call into FastVolume to keep track of the volume data and into Surface to work with surface.
+	main.cpp contains small number of global variables, such as position, camera location, current surface/volume.
+*/
+
 #include "vxTextured.h"
 #include "vxAction.h"
 #include "vxOpenGlTools.h"

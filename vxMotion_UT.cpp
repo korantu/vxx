@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxMotion_UT.cpp
+* file vxMotion_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

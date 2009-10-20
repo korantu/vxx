@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxTouchAction.cpp
+*  file vxTouchAction.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

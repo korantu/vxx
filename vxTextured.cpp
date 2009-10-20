@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxTextured.cpp
+*  file vxTextured.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

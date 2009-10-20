@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxValidatable.cpp
+*  file vxValidatable.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxAction_UT.cpp
+* file vxAction_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

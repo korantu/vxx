@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxRay.cpp
+*  file vxRay.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

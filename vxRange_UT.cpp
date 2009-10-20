@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxRange_UT.cpp
+* file vxRange_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

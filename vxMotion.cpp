@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxMotion.cpp
+*  file vxMotion.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

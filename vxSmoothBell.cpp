@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxSmoothBell.cpp
+*  file vxSmoothBell.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

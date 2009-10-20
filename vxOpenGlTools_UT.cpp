@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxOpenGlTools_UT.cpp
+* file vxOpenGlTools_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

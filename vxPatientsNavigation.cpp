@@ -1,6 +1,6 @@
 /**
  *  
- *  @file vxPatientsNavigation.cpp
+ *  file vxPatientsNavigation.cpp
  *  
  *  This source file is a part of VoxelBrain software.
  *  

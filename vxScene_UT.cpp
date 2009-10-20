@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxScene_UT.cpp
+* file vxScene_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxAction.cpp
+*  file vxAction.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

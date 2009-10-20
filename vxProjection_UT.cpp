@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxProjection_UT.cpp
+* file vxProjection_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 
