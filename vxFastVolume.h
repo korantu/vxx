@@ -194,6 +194,9 @@ class FastVolume {
   int FloodFill ( const V3f & start, unsigned int plane,
 		  unsigned int border );
 
+  //Dilutes the volume at the given plane.
+  int Dilute ( unsigned int plance );
+
 };
  
 

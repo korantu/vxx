@@ -481,20 +481,4 @@ TEST( RasterizeSurfaceN, DISABLED_FastVolume ) {
 
 }
 
-
-TEST( RasterizeSurface, FastVolumeFill ) {
-  FastVolume m; //A set of bitmasks; eight; 
-  Surface surf;
-
-  EXPECT_TRUE(read_surface_binary(surf, "data/lh.pial"));
-
-  TIME( RasterizeSurface( m, surf, 3) , "RasterizeSurface" );
-
-  V3f c = find_center_point(surf);
-  c = m.FromSurface(c);
-  TIME( m.FloodFill ( c, 4, 3 ) , "FloodFill" ); 
-
-}
-
-
 //End of vxSurface_UT.cpp
