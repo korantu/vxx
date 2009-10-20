@@ -1,6 +1,7 @@
 /**
 * 
 * @file vxDrawSurface.h
+	\brief Draw a surface defined by a Surface instance. 
 * 
 * This header file is a part of VoxelBrain software.
 * 
@@ -16,6 +17,8 @@
 #include "vxSurface.h"
 #include "vxTextured.h"
 
+
+/*! \brief Defines how exactly to draw a surface. */
 struct DrawProperties {
   DrawProperties();
   bool colored;
@@ -28,6 +31,7 @@ struct DrawProperties {
 };
 
 void DrawSurface( const Surface & surf, DrawProperties * properties = NULL );
+void MakeSurfaceLists(const Surface & surf, DrawProperties * properties = NULL );
 void DrawSurfaceLines( const Surface & surf );
 void DrawSphereFunction( const V3f & where, 
 			 float radius, 

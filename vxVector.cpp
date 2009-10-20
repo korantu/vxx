@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxVector.cpp
+*  file vxVector.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

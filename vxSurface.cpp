@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxSurface.cpp
+*  file vxSurface.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxVrmlOut_UT.cpp
+* file vxVrmlOut_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

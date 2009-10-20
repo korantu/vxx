@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxFollower.cpp
+*  file vxFollower.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

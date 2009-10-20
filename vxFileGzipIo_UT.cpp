@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxFileGzipIo_UT.cpp
+* file vxFileGzipIo_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

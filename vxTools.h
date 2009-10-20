@@ -14,7 +14,10 @@
 #define __vxTools_h__
 
 #include <iostream>
+
+#ifndef WIN32
 #include <sys/time.h>
+#endif
 
 #include "vxVector.h"
 
@@ -25,7 +28,9 @@ std::ostream & operator <<(std::ostream & out, V3f v);
 
 struct _kdl_timer {
   _kdl_timer(char * _name):name(_name){};
+#ifndef WIN32
   timeval x;
+#endif
   char * name;
   void start();
   void stop();

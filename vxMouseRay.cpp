@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxMouseRay.cpp
+*  file vxMouseRay.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxOpenGlTools.cpp
+*  file vxOpenGlTools.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

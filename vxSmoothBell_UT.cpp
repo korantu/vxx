@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxSmoothBell_UT.cpp
+* file vxSmoothBell_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxFileGzipIo.cpp
+*  file vxFileGzipIo.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

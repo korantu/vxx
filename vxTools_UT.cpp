@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxTools_UT.cpp
+* file vxTools_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

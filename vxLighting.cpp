@@ -1,7 +1,7 @@
 /**
 *  
-*  @file vxLighting.cpp
-*  
+*  file vxLighting.cpp
+*  \brief Automated lighting setup.
 *  This source file is a part of VoxelBrain software.
 *  
 *  (c) Nanyang Technological University

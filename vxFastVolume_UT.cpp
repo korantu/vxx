@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxFastVolume_UT.cpp
+* file vxFastVolume_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

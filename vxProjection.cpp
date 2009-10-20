@@ -1,6 +1,6 @@
 /**
  *  
- *  @file vxProjection.cpp
+ *  file vxProjection.cpp
  *  
  *  This source file is a part of VoxelBrain software.
  *  

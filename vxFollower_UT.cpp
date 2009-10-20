@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxFollower_UT.cpp
+* file vxFollower_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

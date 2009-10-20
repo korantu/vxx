@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxSurfaceSlicer_UT.cpp
+* file vxSurfaceSlicer_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

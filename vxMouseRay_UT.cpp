@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxMouseRay_UT.cpp
+* file vxMouseRay_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxFastVolume.cpp
+*  file vxFastVolume.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  
@@ -122,7 +122,7 @@ void FastVolume::undo(){
 };
  
 void FastVolume::undo_reset(){
-	undo_info.clear();
+	//undo_info.clear(); TODO undo won't clear
 };
 
 std::vector<int> undo_buffer;

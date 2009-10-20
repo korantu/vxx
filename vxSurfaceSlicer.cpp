@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxSurfaceSlicer.cpp
+*  file vxSurfaceSlicer.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

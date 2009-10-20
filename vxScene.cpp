@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxScene.cpp
+*  file vxScene.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

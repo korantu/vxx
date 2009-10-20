@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxDrawSurface_UT.cpp
+* file vxDrawSurface_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

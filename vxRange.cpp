@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxRange.cpp
+*  file vxRange.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  

@@ -1,6 +1,6 @@
 /**
 *  
-*  @file vxFontFtgl.cpp
+*  file vxFontFtgl.cpp
 *  
 *  This source file is a part of VoxelBrain software.
 *  
