@@ -1,6 +1,8 @@
 /**
 *  
 *  @file vxLoader.h
+\brief Loads and stores MGZ files using MgzLoader class.
+Also includes loading code for vx2 version of software.
 *  
 *  This header file is a part of VoxelBrain software.
 *  
@@ -27,9 +29,54 @@
 #include "vxFastVolume.h"
 #include "vxValidatable.h"
 
+
+/*! \brief Loads and stores volume data in FreeSurfer .mgz format.
+Provides access to the storage parameters, and can then be used to save the data exactly in the same form, only the actula volume data is replaced. Headers and parameters are left intact. */
+class MgzLoader: public Validatable {
+ public:
+
+/*! \brief Voxel data type in the file. */
+  enum DataType{
+    UCHAR = 0,
+    INT,
+    LONG,
+    FLOAT,
+    SHORT,
+    BITMAP,
+    TENSOR
+  };
+
+  /*! \brief Information about the volume data in the file. */
+  struct Header{
+    int width;
+    int height;
+    int depth;
+    
+    DataType data_type;
+  };
+
+  /*! \brief Constructs MgzLoader and assigns corresponding FastVolume data. 
+  The FastVolume data will be used when saving and loading. Ownership of the object is not transferred. */
+  MgzLoader(FastVolume &);
+  ~MgzLoader();
+
+  MgzLoader & Load(std::string name); //!< \brief Load data from the file named name. Keeps the whole file uncompressed in memory, so that when Save is needed, we could just replace the part corresponding to volume data, ans leave all the headers as they were.   
+  MgzLoader & Save(std::string name); //!< \brief Save FastVolume to the file named name. The previously loaded file used as template.
+  
+ private:
+  Header header_;
+  FastVolume & volume_;
+  std::string file_name_;
+  std::string file_content_;
+};
+ 
+
 /* Load volume data from file */
 
 //_* Header defintion
+
+/*! \brief A version of MgzLoader. Deprecated.
+Used in vx2. */
 class Loader {
 public:
   Loader();
@@ -93,47 +140,9 @@ private:
   void set_float(raw data, float in, int & pos);
   void set_char(raw data, char inc, int & pos);
   void parse(raw data, FastVolume & result, bool read);
-
 };
 
-///Loader interface for MGZ files.
-///Exposes header of original file.
-///Remembers raw data and file name.
 
-class MgzLoader: public Validatable {
- public:
-
-  enum DataType{
-    UCHAR = 0,
-    INT,
-    LONG,
-    FLOAT,
-    SHORT,
-    BITMAP,
-    TENSOR
-  };
-
-  struct Header{
-    int width;
-    int height;
-    int depth;
-    
-    DataType data_type;
-  };
-
-  MgzLoader(FastVolume &);
-  ~MgzLoader();
-
-  MgzLoader & Load(std::string name);
-  MgzLoader & Save(std::string name);
-  
- private:
-  Header header_;
-  FastVolume & volume_;
-  std::string file_name_;
-  std::string file_content_;
-};
- 
 
 #endif // __vxLoader_h__
 

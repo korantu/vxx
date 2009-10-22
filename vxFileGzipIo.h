@@ -77,10 +77,12 @@ class Io: public Validatable {
  
 //File io. Empty strings are returned if reading fails.
 
+/*! \brief Read file named name into STL string.
+The interface is simple, any error results in empty output string, which is handled when parsing. */
 std::string ReadFile(std::string name);
-std::string ReadGzipFile(std::string name);
-bool WriteFile( std::string name, std::string contents);
-bool WriteGzipFile( std::string name, std::string contents);
+std::string ReadGzipFile(std::string name); //!< \brief Same as ReadFile, but assumes the file is compressed. 
+bool WriteFile( std::string name, std::string contents); //!< \brief Write contents to a file named name. 
+bool WriteGzipFile( std::string name, std::string contents); //!< \brief Compress and write contents to a file named name. 
  
 
 #endif // __vxFileGzipIo_h__

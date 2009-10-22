@@ -1,8 +1,12 @@
 /**
 * 
 * @file main.cpp
+\brief Main file. 
+Defines all the user Action s and the drawing Action.
+Global variables for use in actions are also defined here.
+Contains main loop.
 *
-* This test file is a part of VoxelBrain software.
+* This file is a part of VoxelBrain software.
 * 
 * (c) Nanyang Technological University
 *
@@ -32,20 +36,23 @@
 #include "vxSurfaceSlicer.h"
 #include "vxFollower.h"
 
+/*! \brief Flag to show/hide surface.  */
 bool show_surface = true;
-DrawProperties surface_type;
+DrawProperties surface_type; //!< \brief Defines what kind of rendering is done by DrawSurface. 
 
-V3f center(0,0,0); //Where the center of the crossecting object is located.
-float radius = 30; //Its radius.
-float depth_correction = 0.8f; //How deep it is; 1 - on the surface, 0 - in the center.
+V3f center(0,0,0); //!< Where the center of the crossecting object is located.
+float radius = 30; //!< Its radius.
+float depth_correction = 0.8f; //!< How deep it is; 1 - on the surface, 0 - in the center.
 
 int kernel = 6;
 
-Surface surf; 
-FastVolume vol;
-Textured tex;
-BorderLine bdr;
+Surface surf; //!< \brief Main surface. 
+FastVolume vol; //!< \brief Main volume. 
+Textured tex; //!< \brief The texture. 
+BorderLine bdr; //!< \brief Thin red line around the sphere. 
 
+/*! \brief Update the sphere.
+Updates border. */
 void SphereMoved(){
   surface_type.center = center;
   surface_type.radius = radius * 1.2;
@@ -53,18 +60,26 @@ void SphereMoved(){
   GetBorderLine(&surf, center, radius, &bdr);
 };
 
+/*! \brief Name of the data in use.
+ */
 std::string patient_name = "None loaded.";
 
+/*! \brief Unused
+ */
 struct Kerneler : Action {
   int val;
   void Init(int _val){val = _val;};
   void Start(){kernel = val;};
 };
 
+/*! \brief Switch to show/hide the surface.
+Implemented as a a bidable action */
 struct SurfaceSwitcher: Action {
   void Start(){ show_surface = !show_surface; };
 } surface_switcher;
 
+/*! \brief Action to place a sphere onto the surface.
+Done by pointing mouse. */
 struct SpherePlacer: Action {
   
   void Do(){
@@ -77,7 +92,8 @@ struct SpherePlacer: Action {
   };
 } sphere_placer;
 
-//Moving projection along the axis.
+/*! \brief Move the object with the mouse axis-wise.
+Z axis. */
 struct SphereTunerZ : Action {
   void Do(){
     center += GetProjection()->Z() * ((float)GetMotion()->dy / 4.0); 
@@ -85,6 +101,8 @@ struct SphereTunerZ : Action {
 } sphere_tuner_z;
 
 
+/*! \brief Move the object with the mouse axis-wise.
+XY-plane. */
 struct SphereTunerXY : Action {
   void Do(){
     center += GetProjection()->X() * ((float)GetMotion()->dx / 2.0); 
@@ -92,6 +110,8 @@ struct SphereTunerXY : Action {
   };
 } sphere_tuner_xy;
 
+/*! \brief an Action to change where the focus is.
+So that rotation happens around it. */
 struct Focuser : Action {
   void Start(){
     GetProjection()->Focus(center);
@@ -100,7 +120,8 @@ struct Focuser : Action {
 
 
 
-//Ajust the sphere.
+/*! \brief An action to resize the sphere.
+ */
 struct SphereSizer : Action {
   
   int x_old, y_old;
@@ -128,6 +149,8 @@ struct SphereSizer : Action {
     
 } sphere_sizer;
 
+/*! \brief An base action to pick a point on the sphere.
+Updates the coloring as well. Can be used in various modifying actions. */
 struct PickingAction: Action {
 
   virtual void Modify(Surface * surf, V3f pos) = 0;
@@ -145,6 +168,8 @@ struct PickingAction: Action {
   };
 };
 
+/*! \brief Push the surface to the point.
+Derived from PickingAction.  */
 struct PushingAction: PickingAction {
   bool push;
 
@@ -156,6 +181,8 @@ struct PushingAction: PickingAction {
 
 };
 
+/*! \brief Smooth the surface around the point.
+Derived from PickingAction.  */
 struct SmoothingAction: PickingAction {
   virtual void Modify(Surface * surf, V3f pos){
     SmoothSurfaceAtPoint( surf, pos, kernel);
@@ -163,6 +190,8 @@ struct SmoothingAction: PickingAction {
 } smoother;
 
 
+/*! \brief Raise the surface to the point.
+Derived from PickingAction.  */
 struct RaisingAction: PickingAction {
   virtual void Modify(Surface * surf, V3f pos){
     RaiseSurfaceAtPoint( surf, pos, kernel);
@@ -170,7 +199,8 @@ struct RaisingAction: PickingAction {
 } raiser;
 
 
-
+/*! \brief Undo.
+Uses internal undo queue.  */
 struct UnPushingAction: Action {
   void Start(){
       UndoPushPoint(surf);
@@ -182,6 +212,8 @@ struct UnPushingAction: Action {
   }
 } unpusher;
 
+/*! \brief Color/uncolor the surface.
+ */
 struct ColorSwitch: Action {
   void Start(){
     surface_type.colored = !surface_type.colored;
@@ -189,6 +221,8 @@ struct ColorSwitch: Action {
   }
 } colorer;
 
+/*! \brief Toggle wireframe display.
+ */
 struct WireSwitch: Action {
   void Start(){
     surface_type.wireframe = !surface_type.wireframe;
@@ -196,6 +230,8 @@ struct WireSwitch: Action {
   }
 } wirerer;
 
+/*! \brief Display only part of the surface.
+ */
 struct LimitSwitch: Action {
   void Start(){
     surface_type.limited = !surface_type.limited;
@@ -204,7 +240,11 @@ struct LimitSwitch: Action {
 } limiter;
 
 
+/*! \brief Patient navigation actions.
+Bound in the constructor. */
 struct MainNavigation: kdl_pnv::PatientsNavigation{
+  /*! \brief Place to do things when a new patient is loaded.
+   */
   void Update(std::string patient){
     patient_name = patient;
     surf.Invalidate();
@@ -213,7 +253,8 @@ struct MainNavigation: kdl_pnv::PatientsNavigation{
 };
 
 
-
+/*! \brief Entry point. 
+Nothing interesting, mostly wiring of the actions and addition of the console. */
 int main(int argc, char ** argv){
 
   MainNavigation nav;

@@ -1,6 +1,8 @@
 /**
 *  
 *  @file vxMouseRay.h
+   \brief Defines ray from the mouse point.
+   MouseRay returns the ray from the current mouse position.
 *  
 *  This header file is a part of VoxelBrain software.
 *  
@@ -15,7 +17,8 @@
 
 #include "vxRay.h"
 
-//Always existing; Current viewing ray from the mouse point.
+/*! \brief Current viewing ray from the mouse point.
+The ray always exists. */
 Ray MouseRay(); 
 
 #endif // __vxMouseRay_h__

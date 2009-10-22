@@ -1,6 +1,6 @@
 /**
 * 
-* @file vxTouchAction_UT.cpp
+* file vxTouchAction_UT.cpp
 *
 * This test file is a part of VoxelBrain software.
 * 

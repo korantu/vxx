@@ -1,6 +1,6 @@
-/*
+/*!
  * @file vxDrawSphere.h
-	\brief Code to draw a textured sphere.
+\brief Code to draw a textured sphere.
 	The sphere can be either drawn immediately, or prepared and drawn later, when needed.
  *
  * This header file is a part of VoxelBrain software.

@@ -1,6 +1,8 @@
 /**
 *  
 *  @file vxTools.h
+\brief Internal testing facilities.
+No user-operatable parts inside.
 *  
 *  This header file is a part of VoxelBrain software.
 *  
